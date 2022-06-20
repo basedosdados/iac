@@ -1,0 +1,12 @@
+---
+# Cloud SQL Proxy service
+kind: Service
+apiVersion: v1
+metadata:
+  name: cloud-sql-proxy
+  namespace: prefect
+spec:
+  type: ExternalName
+  externalName: cloud-sql-proxy.cloud-sql-proxy.svc.cluster.local
+  ports:
+    - port: 5432

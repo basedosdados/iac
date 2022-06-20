@@ -1,0 +1,256 @@
+#
+# helm upgrade --install prefect -n prefect prefecthq/prefect-server -f values.yaml
+# helm upgrade --install prefect -n prefect ../../../../server/helm/prefect-server/. -f values.yaml
+#
+
+---
+serverVersionTag: "core-0.15.9"
+
+prefectVersionTag: "0.15.9"
+
+uiVersionTag: "latest"
+
+imagePullSecrets:
+  []
+
+annotations: {}
+
+postgresql:
+  postgresqlDatabase: prefect
+  postgresqlUsername: prefect
+  existingSecret: postgresql-password
+  servicePort: 5432
+  externalHostname: "cloud-sql-proxy"
+  useSubChart: false
+
+  persistence:
+    enabled: false
+    size: 8Gi
+
+  initdbUser: postgres
+
+  initdbScripts:
+    create_pgcrypto.sql: |
+      -- create pgcrypto extension, required for Hasura UUID
+      CREATE EXTENSION IF NOT EXISTS pgcrypto;
+      CREATE EXTENSION IF NOT EXISTS "pg_trgm";
+      SET TIME ZONE 'UTC';
+
+prefectConfig:
+  services:
+    towel:
+      max_scheduled_runs_per_flow: "50"
+
+hasura:
+  image:
+    name: hasura/graphql-engine
+    tag: v1.3.3
+    pullPolicy: IfNotPresent
+    pullSecrets: []
+
+  service:
+    type: ClusterIP
+    port: 3000
+
+  labels: {}
+  annotations: {}
+  replicas: 1
+  strategy: {}
+  podSecurityContext: {}
+  securityContext: {}
+  env: []
+  resources:
+    limits:
+      cpu: "500m"
+      memory: "1Gi"
+    requests:
+      cpu: "100m"
+      memory: "256Mi"
+  nodeSelector: {}
+  tolerations: []
+  affinity: {}
+
+graphql:
+  image:
+    name: prefecthq/server
+    tag: null
+    pullPolicy: Always
+    pullSecrets: []
+
+  service:
+    type: ClusterIP
+    port: 4201
+
+  labels: {}
+  annotations: {}
+  replicas: 2
+  strategy: {}
+  podSecurityContext: {}
+  securityContext: {}
+  env: {}
+  resources:
+    limits:
+      cpu: "500m"
+      memory: "1Gi"
+    requests:
+      cpu: "100m"
+      memory: "256Mi"
+  nodeSelector: {}
+  tolerations: []
+  affinity: {}
+
+  init:
+    env: {}
+    resources: {}
+
+apollo:
+  image:
+    name: prefecthq/apollo
+    tag: null
+    pullPolicy: Always
+    pullSecrets: []
+
+  options:
+    telemetryEnabled: true
+
+  service:
+    type: ClusterIP
+    port: 4200
+
+  ingress:
+    enabled: false
+    annotations: {}
+    labels: {}
+    hosts: []
+    path: /
+
+  labels: {}
+  annotations: {}
+  replicas: 2
+  strategy: {}
+  podSecurityContext: {}
+  securityContext: {}
+  env: {}
+  resources:
+    limits:
+      cpu: "500m"
+      memory: "1Gi"
+    requests:
+      cpu: "100m"
+      memory: "256Mi"
+  nodeSelector: {}
+  tolerations: []
+  affinity: {}
+
+ui:
+  image:
+    name: prefecthq/ui
+    tag: null
+    pullPolicy: Always
+    pullSecrets: []
+
+  apolloApiUrl: http://prefect-apollo.prefect.svc.cluster.local:4200/graphql
+
+  service:
+    type: ClusterIP
+    port: 8080
+
+  ingress:
+    enabled: false
+    annotations: {}
+    labels: {}
+    hosts: []
+    path: /
+
+  labels: {}
+  annotations: {}
+  replicas: 1
+  strategy: {}
+  podSecurityContext: {}
+  securityContext: {}
+  env: {}
+  resources: {}
+  nodeSelector: {}
+  tolerations: []
+  affinity: {}
+
+towel:
+  image:
+    name: prefecthq/server
+    tag: null
+    pullPolicy: Always
+    pullSecrets: []
+
+  labels: {}
+  annotations: {}
+  replicas: 1
+  strategy: {}
+  podSecurityContext: {}
+  securityContext: {}
+  env: {}
+  resources: {}
+  nodeSelector: {}
+  tolerations: []
+  affinity: {}
+
+agent:
+  enabled: true
+  prefectLabels:
+    - basedosdados-dev
+  jobTemplateFilePath: "https://storage.googleapis.com/basedosdados-dev/prefect_job_template/job_template.yaml"
+  image:
+    name: prefecthq/prefect
+    tag: null
+    pullPolicy: Always
+    pullSecrets: []
+
+  labels: {}
+  annotations: {}
+  replicas: 1
+  strategy: {}
+  podSecurityContext: {}
+  securityContext: {}
+  env: {}
+  nodeSelector: {}
+  tolerations: []
+  affinity: {}
+
+  resources:
+    limits:
+      cpu: 100m
+      memory: 128Mi
+
+  job:
+    resources:
+      limits:
+        memory: ""
+        cpu: ""
+      requests:
+        memory: ""
+        cpu: ""
+    imagePullPolicy: ""
+    imagePullSecrets: []
+
+serviceAccount:
+  create: true
+  name: null
+
+jobs:
+  createTenant:
+    enabled: false
+    tenant:
+      name: default
+      slug: default
+    image:
+      name: prefecthq/prefect
+      tag: null
+      pullPolicy: Always
+      pullSecrets: []
+    labels: {}
+    annotations: {}
+    podSecurityContext: {}
+    securityContext: {}
+    nodeSelector: {}
+    tolerations: []
+    affinity: {}
+    backoffLimit: 10
