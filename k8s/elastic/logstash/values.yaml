@@ -1,4 +1,6 @@
----
+#
+# helm upgrade --install logstash elastic/logstash --version 7.17.3 -f values.yaml -n elastic
+#
 replicas: 1
 
 # Allows you to add any config files in /usr/share/logstash/config/
@@ -25,7 +27,7 @@ logstashPipeline:
     output { elasticsearch { hosts => "http://elasticsearch-master:9200"} }
 
 # Allows you to add any pattern files in your custom pattern dir
-logstashPatternDir: "/usr/share/logstash/patterns/"
+logstashPatternDir: /usr/share/logstash/patterns/
 logstashPattern: {}
 #    pattern.conf: |
 #      DPKG_VERSION [-+~<>\.0-9a-zA-Z]+
@@ -69,9 +71,9 @@ hostAliases: []
 #  - "foo.local"
 #  - "bar.local"
 
-image: "docker.elastic.co/logstash/logstash"
-imageTag: "7.17.3"
-imagePullPolicy: "IfNotPresent"
+image: docker.elastic.co/logstash/logstash
+imageTag: 7.17.3
+imagePullPolicy: IfNotPresent
 imagePullSecrets: []
 
 podAnnotations: {}
@@ -79,18 +81,18 @@ podAnnotations: {}
 # additionals labels
 labels: {}
 
-logstashJavaOpts: "-Xmx1g -Xms1g"
+logstashJavaOpts: -Xmx1g -Xms1g
 
 resources:
   requests:
-    cpu: "100m"
-    memory: "1536Mi"
+    cpu: 100m
+    memory: 1536Mi
   limits:
-    cpu: "1000m"
-    memory: "1536Mi"
+    cpu: 1000m
+    memory: 1536Mi
 
 volumeClaimTemplate:
-  accessModes: ["ReadWriteOnce"]
+  accessModes: [ReadWriteOnce]
   resources:
     requests:
       storage: 1Gi
@@ -98,16 +100,15 @@ volumeClaimTemplate:
 rbac:
   create: false
   serviceAccountAnnotations: {}
-  serviceAccountName: ""
-  annotations:
-    {}
+  serviceAccountName: ''
+  annotations: {}
     #annotation1: "value1"
     #annotation2: "value2"
     #annotation3: "value3"
 
 podSecurityPolicy:
   create: false
-  name: ""
+  name: ''
   spec:
     privileged: false
     fsGroup:
@@ -119,48 +120,44 @@ podSecurityPolicy:
     supplementalGroups:
       rule: RunAsAny
     volumes:
-      - secret
-      - configMap
-      - persistentVolumeClaim
+    - secret
+    - configMap
+    - persistentVolumeClaim
 
 persistence:
   enabled: false
   annotations: {}
 
-extraVolumes:
-  []
+extraVolumes: []
   # - name: extras
   #   emptyDir: {}
 
-extraVolumeMounts:
-  []
+extraVolumeMounts: []
   # - name: extras
   #   mountPath: /usr/share/extras
   #   readOnly: true
 
-extraContainers:
-  []
+extraContainers: []
   # - name: do-something
   #   image: busybox
   #   command: ['do', 'something']
 
-extraInitContainers:
-  []
+extraInitContainers: []
   # - name: do-something
   #   image: busybox
   #   command: ['do', 'something']
 
 # This is the PriorityClass settings as defined in
 # https://kubernetes.io/docs/concepts/configuration/pod-priority-preemption/#priorityclass
-priorityClassName: ""
+priorityClassName: ''
 
 # By default this will make sure two pods don't end up on the same node
 # Changing this to a region would allow you to spread pods across regions
-antiAffinityTopologyKey: "kubernetes.io/hostname"
+antiAffinityTopologyKey: kubernetes.io/hostname
 
 # Hard means that by default pods will only be scheduled if there are enough nodes for them
 # and that they will never end up on the same node. Setting this to soft will do this "best effort"
-antiAffinity: "hard"
+antiAffinity: hard
 
 # This is the node affinity settings as defined in
 # https://kubernetes.io/docs/concepts/scheduling-eviction/assign-pod-node/#node-affinity
@@ -172,13 +169,12 @@ podAffinity: {}
 
 # The default is to deploy all pods serially. By setting this to parallel all pods are started at
 # the same time when bootstrapping the cluster
-podManagementPolicy: "Parallel"
+podManagementPolicy: Parallel
 
 httpPort: 9600
 
 # Custom ports to add to logstash
-extraPorts:
-  []
+extraPorts: []
   # - name: beats
   #   containerPort: 5001
 
@@ -196,7 +192,7 @@ podSecurityContext:
 securityContext:
   capabilities:
     drop:
-      - ALL
+    - ALL
   # readOnlyRootFilesystem: true
   runAsNonRoot: true
   runAsUser: 1000
@@ -242,16 +238,15 @@ readinessProbe:
 ## Use an alternate scheduler.
 ## ref: https://kubernetes.io/docs/tasks/administer-cluster/configure-multiple-schedulers/
 ##
-schedulerName: ""
+schedulerName: ''
 
 nodeSelector: {}
 tolerations: []
 
-nameOverride: ""
-fullnameOverride: ""
+nameOverride: ''
+fullnameOverride: ''
 
-lifecycle:
-  {}
+lifecycle: {}
   # preStop:
   #   exec:
   #     command: ["/bin/sh", "-c", "echo Hello from the postStart handler > /usr/share/message"]
@@ -262,31 +257,30 @@ lifecycle:
 service:
   annotations: {}
   type: ClusterIP
-  loadBalancerIP: ""
+  loadBalancerIP: ''
   ports:
-    - name: beats
-      port: 5044
-      protocol: TCP
-      targetPort: 5044
-    - name: http
-      port: 8080
-      protocol: TCP
-      targetPort: 8080
+  - name: beats
+    port: 5044
+    protocol: TCP
+    targetPort: 5044
+  - name: http
+    port: 8080
+    protocol: TCP
+    targetPort: 8080
 
 ingress:
   enabled: false
-  annotations:
-    {}
+  annotations: {}
     # kubernetes.io/tls-acme: "true"
-  className: "nginx"
+  className: nginx
   pathtype: ImplementationSpecific
   hosts:
-    - host: logstash-example.local
-      paths:
-        - path: /beats
-          servicePort: 5044
-        - path: /http
-          servicePort: 8080
+  - host: logstash-example.local
+    paths:
+    - path: /beats
+      servicePort: 5044
+    - path: /http
+      servicePort: 8080
   tls: []
   #  - secretName: logstash-example-tls
   #    hosts:

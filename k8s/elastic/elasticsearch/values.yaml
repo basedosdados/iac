@@ -1,26 +1,28 @@
----
-clusterName: "elasticsearch"
-nodeGroup: "master"
+#
+# helm upgrade --install elasticsearch elastic/elasticsearch --version 7.17.3 -f values.yaml -n elastic
+#
+clusterName: elasticsearch
+nodeGroup: master
 
 # The service that non master groups will try to connect to when joining the cluster
 # This should be set to clusterName + "-" + nodeGroup for your master group
-masterService: ""
+masterService: ''
 
 # Elasticsearch roles that will be applied to this nodeGroup
 # These will be set as environment variables. E.g. node.master=true
 roles:
-  master: "true"
-  ingest: "true"
-  data: "true"
-  remote_cluster_client: "true"
-  ml: "true"
+  master: 'true'
+  ingest: 'true'
+  data: 'true'
+  remote_cluster_client: 'true'
+  ml: 'true'
 
-replicas: 3
+replicas: 2
 minimumMasterNodes: 2
 
-esMajorVersion: ""
+esMajorVersion: ''
 
-clusterDeprecationIndexing: "false"
+clusterDeprecationIndexing: 'false'
 
 # Allows you to add any config files in /usr/share/elasticsearch/config/
 # such as elasticsearch.yml and log4j2.properties
@@ -64,29 +66,27 @@ hostAliases: []
 #  - "foo.local"
 #  - "bar.local"
 
-image: "docker.elastic.co/elasticsearch/elasticsearch"
-imageTag: "7.17.3"
-imagePullPolicy: "IfNotPresent"
+image: docker.elastic.co/elasticsearch/elasticsearch
+imageTag: 7.17.3
+imagePullPolicy: IfNotPresent
 
-podAnnotations:
-  {}
+podAnnotations: {}
   # iam.amazonaws.com/role: es-cluster
 
 # additionals labels
 labels: {}
 
-esJavaOpts: "" # example: "-Xmx1g -Xms1g"
+esJavaOpts: '' # example: "-Xmx1g -Xms1g"
 
 resources:
   requests:
-    cpu: "1000m"
-    memory: "2Gi"
+    cpu: 500m
+    memory: 1Gi
   limits:
-    cpu: "1000m"
-    memory: "2Gi"
+    cpu: 1000m
+    memory: 2Gi
 
-initResources:
-  {}
+initResources: {}
   # limits:
   #   cpu: "25m"
   #   # memory: "128Mi"
@@ -94,10 +94,10 @@ initResources:
   #   cpu: "25m"
   #   memory: "128Mi"
 
-networkHost: "0.0.0.0"
+networkHost: 0.0.0.0
 
 volumeClaimTemplate:
-  accessModes: ["ReadWriteOnce"]
+  accessModes: [ReadWriteOnce]
   resources:
     requests:
       storage: 30Gi
@@ -105,12 +105,12 @@ volumeClaimTemplate:
 rbac:
   create: false
   serviceAccountAnnotations: {}
-  serviceAccountName: ""
+  serviceAccountName: ''
   automountToken: true
 
 podSecurityPolicy:
   create: false
-  name: ""
+  name: ''
   spec:
     privileged: true
     fsGroup:
@@ -122,10 +122,10 @@ podSecurityPolicy:
     supplementalGroups:
       rule: RunAsAny
     volumes:
-      - secret
-      - configMap
-      - persistentVolumeClaim
-      - emptyDir
+    - secret
+    - configMap
+    - persistentVolumeClaim
+    - emptyDir
 
 persistence:
   enabled: true
@@ -134,40 +134,36 @@ persistence:
     enabled: false
   annotations: {}
 
-extraVolumes:
-  []
+extraVolumes: []
   # - name: extras
   #   emptyDir: {}
 
-extraVolumeMounts:
-  []
+extraVolumeMounts: []
   # - name: extras
   #   mountPath: /usr/share/extras
   #   readOnly: true
 
-extraContainers:
-  []
+extraContainers: []
   # - name: do-something
   #   image: busybox
   #   command: ['do', 'something']
 
-extraInitContainers:
-  []
+extraInitContainers: []
   # - name: do-something
   #   image: busybox
   #   command: ['do', 'something']
 
 # This is the PriorityClass settings as defined in
 # https://kubernetes.io/docs/concepts/configuration/pod-priority-preemption/#priorityclass
-priorityClassName: ""
+priorityClassName: ''
 
 # By default this will make sure two pods don't end up on the same node
 # Changing this to a region would allow you to spread pods across regions
-antiAffinityTopologyKey: "kubernetes.io/hostname"
+antiAffinityTopologyKey: kubernetes.io/hostname
 
 # Hard means that by default pods will only be scheduled if there are enough nodes for them
 # and that they will never end up on the same node. Setting this to soft will do this "best effort"
-antiAffinity: "hard"
+antiAffinity: soft
 
 # This is the node affinity settings as defined in
 # https://kubernetes.io/docs/concepts/configuration/assign-pod-node/#node-affinity-beta-feature
@@ -175,7 +171,7 @@ nodeAffinity: {}
 
 # The default is to deploy all pods serially. By setting this to parallel all pods are started at
 # the same time when bootstrapping the cluster
-podManagementPolicy: "Parallel"
+podManagementPolicy: Parallel
 
 # The environment variables injected by service links are not used, but can lead to slow Elasticsearch boot times when
 # there are many services in the current namespace.
@@ -194,13 +190,13 @@ service:
   # Consider that all endpoints are considered "ready" even if the Pods themselves are not
   # https://kubernetes.io/docs/reference/kubernetes-api/service-resources/service-v1/#ServiceSpec
   publishNotReadyAddresses: false
-  nodePort: ""
+  nodePort: ''
   annotations: {}
   httpPortName: http
   transportPortName: transport
-  loadBalancerIP: ""
+  loadBalancerIP: ''
   loadBalancerSourceRanges: []
-  externalTrafficPolicy: ""
+  externalTrafficPolicy: ''
 
 updateStrategy: RollingUpdate
 
@@ -216,7 +212,7 @@ podSecurityContext:
 securityContext:
   capabilities:
     drop:
-      - ALL
+    - ALL
   # readOnlyRootFilesystem: true
   runAsNonRoot: true
   runAsUser: 1000
@@ -234,12 +230,12 @@ readinessProbe:
   timeoutSeconds: 5
 
 # https://www.elastic.co/guide/en/elasticsearch/reference/7.17/cluster-health.html#request-params wait_for_status
-clusterHealthCheckParams: "wait_for_status=green&timeout=1s"
+clusterHealthCheckParams: wait_for_status=green&timeout=1s
 
 ## Use an alternate scheduler.
 ## ref: https://kubernetes.io/docs/tasks/administer-cluster/configure-multiple-schedulers/
 ##
-schedulerName: ""
+schedulerName: ''
 
 imagePullSecrets: []
 nodeSelector: {}
@@ -252,23 +248,22 @@ ingress:
   annotations: {}
   # kubernetes.io/ingress.class: nginx
   # kubernetes.io/tls-acme: "true"
-  className: "nginx"
+  className: nginx
   pathtype: ImplementationSpecific
   hosts:
-    - host: chart-example.local
-      paths:
-        - path: /
+  - host: chart-example.local
+    paths:
+    - path: /
   tls: []
   #  - secretName: chart-example-tls
   #    hosts:
   #      - chart-example.local
 
-nameOverride: ""
-fullnameOverride: ""
-healthNameOverride: ""
+nameOverride: ''
+fullnameOverride: ''
+healthNameOverride: ''
 
-lifecycle:
-  {}
+lifecycle: {}
   # preStop:
   #   exec:
   #     command: ["/bin/sh", "-c", "echo Hello from the postStart handler > /usr/share/message"]
@@ -352,4 +347,4 @@ tests:
 
 # Deprecated
 # please use the above podSecurityContext.fsGroup instead
-fsGroup: ""
+fsGroup: ''

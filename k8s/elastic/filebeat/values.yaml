@@ -1,4 +1,6 @@
----
+#
+# helm upgrade --install filebeat elastic/filebeat --version 7.17.3 -f values.yaml -n elastic
+#
 daemonset:
   # Annotations to apply to the daemonset
   annotations: {}
@@ -14,12 +16,10 @@ daemonset:
   extraEnvs: []
   #  - name: MY_ENVIRONMENT_VAR
   #    value: the_value_goes_here
-  extraVolumes:
-    []
+  extraVolumes: []
     # - name: extras
     #   emptyDir: {}
-  extraVolumeMounts:
-    []
+  extraVolumeMounts: []
     # - name: extras
     #   mountPath: /usr/share/extras
     #   readOnly: true
@@ -40,7 +40,7 @@ daemonset:
                 logs_path: "/var/log/containers/"
 
       output.logstash:
-        host: ["logstash-logstash:5044"]
+        hosts: ["logstash-logstash:5044"]
   # Only used when updateStrategy is set to "RollingUpdate"
   maxUnavailable: 1
   nodeSelector: {}
@@ -59,11 +59,11 @@ daemonset:
     privileged: false
   resources:
     requests:
-      cpu: "100m"
-      memory: "100Mi"
+      cpu: 100m
+      memory: 100Mi
     limits:
-      cpu: "1000m"
-      memory: "200Mi"
+      cpu: 1000m
+      memory: 200Mi
   tolerations: []
 
 deployment:
@@ -116,17 +116,17 @@ deployment:
     privileged: false
   resources:
     requests:
-      cpu: "100m"
-      memory: "100Mi"
+      cpu: 100m
+      memory: 100Mi
     limits:
-      cpu: "1000m"
-      memory: "200Mi"
+      cpu: 1000m
+      memory: 200Mi
   tolerations: []
 
 # Replicas being used for the filebeat deployment
 replicas: 1
 
-extraContainers: ""
+extraContainers: ''
 # - name: dummy-init
 #   image: busybox
 #   command: ['echo', 'hey']
@@ -146,19 +146,19 @@ hostAliases: []
 #  hostnames:
 #  - "foo.local"
 #  - "bar.local"
-image: "docker.elastic.co/beats/filebeat"
-imageTag: "7.17.3"
-imagePullPolicy: "IfNotPresent"
+image: docker.elastic.co/beats/filebeat
+imageTag: 7.17.3
+imagePullPolicy: IfNotPresent
 imagePullSecrets: []
 
 livenessProbe:
   exec:
     command:
-      - sh
-      - -c
-      - |
-        #!/usr/bin/env bash -e
-        curl --fail 127.0.0.1:5066
+    - sh
+    - -c
+    - |
+      #!/usr/bin/env bash -e
+      curl --fail 127.0.0.1:5066
   failureThreshold: 3
   initialDelaySeconds: 10
   periodSeconds: 10
@@ -167,11 +167,11 @@ livenessProbe:
 readinessProbe:
   exec:
     command:
-      - sh
-      - -c
-      - |
-        #!/usr/bin/env bash -e
-        filebeat test output
+    - sh
+    - -c
+    - |
+      #!/usr/bin/env bash -e
+      filebeat test output
   failureThreshold: 3
   initialDelaySeconds: 10
   periodSeconds: 10
@@ -181,49 +181,47 @@ readinessProbe:
 managedServiceAccount: true
 
 clusterRoleRules:
-  - apiGroups:
-      - ""
-    resources:
-      - namespaces
-      - nodes
-      - pods
-    verbs:
-      - get
-      - list
-      - watch
-  - apiGroups:
-      - "apps"
-    resources:
-      - replicasets
-    verbs:
-      - get
-      - list
-      - watch
+- apiGroups:
+  - ''
+  resources:
+  - namespaces
+  - nodes
+  - pods
+  verbs:
+  - get
+  - list
+  - watch
+- apiGroups:
+  - apps
+  resources:
+  - replicasets
+  verbs:
+  - get
+  - list
+  - watch
 
-podAnnotations:
-  {}
+podAnnotations: {}
   # iam.amazonaws.com/role: es-cluster
 
 # Custom service account override that the pod will use
-serviceAccount: ""
+serviceAccount: ''
 
 # Annotations to add to the ServiceAccount that is created if the serviceAccount value isn't set.
-serviceAccountAnnotations:
-  {}
+serviceAccountAnnotations: {}
   # eks.amazonaws.com/role-arn: arn:aws:iam::111111111111:role/k8s.clustername.namespace.serviceaccount
 
 # How long to wait for Filebeat pods to stop gracefully
 terminationGracePeriod: 30
 # This is the PriorityClass settings as defined in
 # https://kubernetes.io/docs/concepts/configuration/pod-priority-preemption/#priorityclass
-priorityClassName: ""
+priorityClassName: ''
 
 updateStrategy: RollingUpdate
 
 # Override various naming aspects of this chart
 # Only edit these if you know what you're doing
-nameOverride: ""
-fullnameOverride: ""
+nameOverride: ''
+fullnameOverride: ''
 
 # DEPRECATED
 affinity: {}

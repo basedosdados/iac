@@ -1,5 +1,7 @@
----
-elasticsearchHosts: "http://elasticsearch-master:9200"
+#
+# helm upgrade --install kibana elastic/kibana --version 7.17.3 -f values.yaml -n elastic
+#
+elasticsearchHosts: http://elasticsearch-master:9200
 
 replicas: 1
 
@@ -7,8 +9,8 @@ replicas: 1
 # This will be appended to the current 'env:' key. You can use any of the kubernetes env
 # syntax here
 extraEnvs:
-  - name: "NODE_OPTIONS"
-    value: "--max-old-space-size=1800"
+- name: NODE_OPTIONS
+  value: --max-old-space-size=1800
 #  - name: MY_ENVIRONMENT_VAR
 #    value: the_value_goes_here
 
@@ -34,9 +36,9 @@ hostAliases: []
 #  - "foo.local"
 #  - "bar.local"
 
-image: "docker.elastic.co/kibana/kibana"
-imageTag: "7.17.3"
-imagePullPolicy: "IfNotPresent"
+image: docker.elastic.co/kibana/kibana
+imageTag: 7.17.3
+imagePullPolicy: IfNotPresent
 
 # additionals labels
 labels: {}
@@ -48,17 +50,17 @@ podAnnotations: {}
 
 resources:
   requests:
-    cpu: "1000m"
-    memory: "2Gi"
+    cpu: 500m
+    memory: 1Gi
   limits:
-    cpu: "1000m"
-    memory: "2Gi"
+    cpu: 1000m
+    memory: 2Gi
 
 protocol: http
 
-serverHost: "0.0.0.0"
+serverHost: 0.0.0.0
 
-healthCheckPath: "/app/kibana"
+healthCheckPath: /app/kibana
 
 # Allows you to add any config files in /usr/share/kibana/config/
 # such as kibana.yml
@@ -75,29 +77,27 @@ podSecurityContext:
 securityContext:
   capabilities:
     drop:
-      - ALL
+    - ALL
   # readOnlyRootFilesystem: true
   runAsNonRoot: true
   runAsUser: 1000
 
-serviceAccount: ""
+serviceAccount: ''
 
 # Whether or not to automount the service account token in the pod. Normally, Kibana does not need this
 automountToken: true
 
 # This is the PriorityClass settings as defined in
 # https://kubernetes.io/docs/concepts/configuration/pod-priority-preemption/#priorityclass
-priorityClassName: ""
+priorityClassName: ''
 
 httpPort: 5601
 
-extraVolumes:
-  []
+extraVolumes: []
   # - name: extras
   #   emptyDir: {}
 
-extraVolumeMounts:
-  []
+extraVolumeMounts: []
   # - name: extras
   #   mountPath: /usr/share/extras
   #   readOnly: true
@@ -114,41 +114,42 @@ extraInitContainers: []
 #   command: ['echo', 'hey']
 
 updateStrategy:
-  type: "Recreate"
+  type: Recreate
 
 service:
   type: ClusterIP
-  loadBalancerIP: ""
+  loadBalancerIP: ''
   port: 5601
-  nodePort: ""
+  nodePort: ''
   labels: {}
-  annotations:
-    {}
+  annotations: {}
     # cloud.google.com/load-balancer-type: "Internal"
     # service.beta.kubernetes.io/aws-load-balancer-internal: 0.0.0.0/0
     # service.beta.kubernetes.io/azure-load-balancer-internal: "true"
     # service.beta.kubernetes.io/openstack-internal-load-balancer: "true"
     # service.beta.kubernetes.io/cce-load-balancer-internal-vpc: "true"
-  loadBalancerSourceRanges:
-    []
+  loadBalancerSourceRanges: []
     # 0.0.0.0/0
   httpPortName: http
 
 ingress:
-  enabled: true
-  className: "nginx"
+  enabled: false
+  className: nginx
   pathtype: ImplementationSpecific
-  annotations:
-    kubernetes.io/ingress.class: nginx
-  # kubernetes.io/tls-acme: "true"
+  annotations: {}
+    # nginx.ingress.kubernetes.io/rewrite-target: /
+    # nginx.ingress.kubernetes.io/auth-url: https://id.basedosdados.org/auth/
+    # nginx.ingress.kubernetes.io/auth-signin: https://id.basedosdados.org/auth/login/?rd=https://$host$request_uri$is_args$args
+    # cert-manager.io/issuer: letsencrypt-production
+    # nginx.ingress.kubernetes.io/ssl-redirect: 'true'
   hosts:
-    - host: kubernetes.docker.internal
-      paths:
-        - path: /
-  tls: []
-  #  - secretName: chart-example-tls
-  #    hosts:
-  #      - chart-example.local
+  - host: elastic.basedosdados.org
+    paths:
+    - path: /
+  # tls:
+  # - secretName: elastic-tls
+  #   hosts:
+  #   - elastic.basedosdados.org
 
 readinessProbe:
   failureThreshold: 3
@@ -162,11 +163,10 @@ nodeSelector: {}
 tolerations: []
 affinity: {}
 
-nameOverride: ""
-fullnameOverride: ""
+nameOverride: ''
+fullnameOverride: ''
 
-lifecycle:
-  {}
+lifecycle: {}
   # preStop:
   #   exec:
   #     command: ["/bin/sh", "-c", "echo Hello from the postStart handler > /usr/share/message"]
@@ -175,4 +175,4 @@ lifecycle:
   #     command: ["/bin/sh", "-c", "echo Hello from the postStart handler > /usr/share/message"]
 
 # Deprecated - use only with versions < 6.6
-elasticsearchURL: "" # "http://elasticsearch-master:9200"
+elasticsearchURL: '' # "http://elasticsearch-master:9200"
