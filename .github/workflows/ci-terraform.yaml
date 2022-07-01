@@ -14,13 +14,13 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - name: Checkout Files
+    - name: Checkout
       uses: actions/checkout@v3
-      working-directory: ./terraform
 
     - name: Terraform Format
       id: fmt
       run: terraform fmt -check
+      working-directory: ./terraform
 
     - name: Terraform Init
       id: init
