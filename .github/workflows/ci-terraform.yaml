@@ -18,7 +18,7 @@ jobs:
       uses: Bhacaz/checkout-files@v2
       with:
         files:
-        - terraform/
+        - terraform
 
     - name: Terraform Format
       id: fmt
