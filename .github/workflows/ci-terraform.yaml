@@ -15,10 +15,8 @@ jobs:
 
     steps:
     - name: Checkout Files
-      uses: Bhacaz/checkout-files@v2
-      with:
-        files:
-        - terraform/*
+      uses: actions/checkout@v3
+      working-directory: ./terraform
 
     - name: Terraform Format
       id: fmt
