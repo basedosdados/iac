@@ -1,4 +1,5 @@
 .env
+secrets.yaml
 k8s/prefect-agents/agents
 k8s/prefect-agents/configs/*.json
 encryption.key
