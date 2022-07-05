@@ -30,7 +30,7 @@ variable "zone" {
 
 variable "static_pool_machine_type" {
   description = "The machine type to use for the cluster's static pool."
-  default     = "n1-standard-2"
+  default     = "n1-standard-4"
 }
 
 variable "static_pool_node_count" {
