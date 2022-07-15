@@ -35,34 +35,31 @@ docker-stop:
 docker-up:
 	docker-compose up
 
-.PHONY: tf-init tf-fmt tf-validate tf-plan tf-apply tf-destroy tf-workspace-list tf-workspace-dev tf-workspace-staging tf-workspace-prod
+.PHONY: tf-init tf-fmt tf-validate tf-plan tf-apply tf-destroy tf-workspace-list tf-workspace-staging tf-workspace-production
 
 tf-init:
-	docker-compose run --rm terraform init
+	docker-compose run --rm bd_terraform init
 
 tf-fmt:
-	docker-compose run --rm terraform fmt
+	docker-compose run --rm bd_terraform fmt
 
 tf-validate:
-	docker-compose run --rm terraform validate
+	docker-compose run --rm bd_terraform validate
 
 tf-plan:
-	docker-compose run --rm terraform plan
+	docker-compose run --rm bd_terraform plan
 
 tf-apply:
-	docker-compose run --rm terraform apply
+	docker-compose run --rm bd_terraform apply
 
 tf-destroy:
-	docker-compose run --rm terraform destroy
+	docker-compose run --rm bd_terraform destroy
 
 tf-workspace-list:
-	docker-compose run --rm terraform workspace list
-
-tf-workspace-dev:
-	docker-compose run --rm terraform workspace select dev
+	docker-compose run --rm bd_terraform workspace list
 
 tf-workspace-staging:
-	docker-compose run --rm terraform workspace select staging
+	docker-compose run --rm bd_terraform workspace select staging
 
-tf-workspace-prod:
-	docker-compose run --rm terraform workspace select prod
+tf-workspace-production:
+	docker-compose run --rm bd_terraform workspace select production
