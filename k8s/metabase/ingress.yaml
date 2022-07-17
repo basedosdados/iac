@@ -11,10 +11,10 @@ metadata:
 spec:
   tls:
   - hosts:
-    - metabase.basedosdados.org
+    - perguntas.basedosdados.org
     secretName: metabase-tls
   rules:
-  - host: metabase.basedosdados.org
+  - host: perguntas.basedosdados.org
     http:
       paths:
       - path: /

@@ -5,7 +5,7 @@ metadata:
   namespace: metabase
 spec:
   acme:
-    email: gabriel.gazola@poli.ufrj.br
+    email: guilherme.alves@basedosdados.org
     server: https://acme-v02.api.letsencrypt.org/directory
     privateKeySecretRef:
       name: letsencrypt-production

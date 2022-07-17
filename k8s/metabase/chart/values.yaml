@@ -9,7 +9,7 @@ podAnnotations: {}
 podLabels: {}
 image:
   repository: metabase/metabase
-  tag: v0.43.1
+  tag: v0.43.4
   command: []
   pullPolicy: IfNotPresent
   pullSecrets: []
@@ -54,7 +54,7 @@ database:
   existingSecret: metabase-secrets
   # existingSecretUsernameKey:
   # existingSecretPasswordKey:
-  existingSecretConnectionURIKey: DB_CONNECTION_STRING
+  existingSecretConnectionURIKey: DB_CONNECTION_URI
   # existingSecretEncryptionKeyKey:
   ## One or more Google Cloud SQL database instances can be made available to Metabase via the *Cloud SQL Auth proxy*.
   ## These can be used for Metabase's internal database (by specifying `host: localhost` and the port above), or as
