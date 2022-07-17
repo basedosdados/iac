@@ -1,4 +1,4 @@
-# helm upgrade --install prefect-agent -n prefect-agent-questions ../../../../charts/charts/prefect-agent/. -f values.yaml
+# helm install prefect-agent prefeitura-rio/prefect-agent -n prefect-agent-questions -f values.yaml
 
 agent:
   apollo_url: http://prefect-apollo.prefect.svc.cluster.local:4200/
