@@ -95,7 +95,7 @@ variable "sql_metabase_db_name" {
 }
 
 variable "sql_prefect_user_name" {
-  default = "prefect"
+  default     = "prefect"
   description = "SQL Prefect User Name"
 }
 

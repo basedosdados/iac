@@ -30,7 +30,7 @@ provider "google" {
 # }
 
 module "cloud_sql" {
-  source                            = "./cloud_sql"
+  source = "./cloud_sql"
   # depends_on                        = [module.networking]
   region                            = var.region
   sql_version                       = var.sql_version
