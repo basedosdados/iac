@@ -10,7 +10,7 @@ jobs:
     name: Continuous Integration [Terraform]
     runs-on: ubuntu-latest
     env:
-      TF_WORKING_DIR: terraform/
+      TF_WORKING_DIR: terraform
 
     defaults:
       run:
@@ -51,7 +51,7 @@ jobs:
 
     - name: Terraform Plan
       id: plan
-      run: terraform plan -no-color -var-file="${{ env.TF_WORKING_DIR }}/terraform.tfvars"
+      run: terraform plan -no-color -var-file="${{ env.TF_WORKING_DIR }}/variables.tf"
 
     - uses: actions/github-script@v6
       if: github.event_name == 'pull_request'
