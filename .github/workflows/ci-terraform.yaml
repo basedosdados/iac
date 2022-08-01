@@ -55,7 +55,7 @@ jobs:
 
     - name: Terraform Plan
       id: plan
-      run: terraform plan -no-color
+      run: terraform plan -no-color -var-file="variables.tf"
       env:
         GOOGLE_CREDENTIALS: ${{ steps.import_secrets.outputs.TF_VAR_GOOGLE_APPLICATION_CREDENTIALS }}
         sql_ckan_production_user_password: ${{ steps.import_secrets.outputs.TF_VAR_sql_ckan_production_user_password }}
