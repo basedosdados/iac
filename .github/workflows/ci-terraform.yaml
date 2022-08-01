@@ -10,12 +10,12 @@ jobs:
     name: Continuous Integration [Terraform]
     runs-on: ubuntu-latest
     env:
-      TF_WORKING_DIR: terraform
+      tf_actions_working_dir: terraform
 
     defaults:
       run:
         shell: bash
-        working-directory: ${{ env.TF_WORKING_DIR }}
+        working-directory: ${{ env.tf_actions_working_dir }}
 
     steps:
     - name: Checkout
@@ -41,7 +41,7 @@ jobs:
 
     - name: Terraform Init
       id: init
-      run: terraform init -backend=true
+      run: terraform init
       env:
         GOOGLE_CREDENTIALS: ${{ steps.import_secrets.outputs.TF_VAR_GOOGLE_APPLICATION_CREDENTIALS }}
 
