@@ -10,14 +10,17 @@ jobs:
     name: Continuous Integration [Terraform]
     runs-on: ubuntu-latest
     env:
-      TF_WORKING_DIR: terraform/
+      tf_actions_working_dir: terraform
 
     defaults:
       run:
         shell: bash
-        working-directory: ${{ env.TF_WORKING_DIR }}
+        working-directory: ${{ env.tf_actions_working_dir }}
 
     steps:
+    - name: Checkout
+      uses: actions/checkout@v3
+
     - name: Import Secrets
       id: import_secrets
       uses: hashicorp/vault-action@v2.4.1
@@ -25,25 +28,34 @@ jobs:
         url: https://vault.basedosdados.org
         token: ${{ secrets.VAULT_TOKEN }}
         secrets: |
-          secret/data/terraform_credentials    GOOGLE_APPLICATION_CREDENTIALS | GOOGLE_APPLICATION_CREDENTIALS ;
-          secret/data/terraform_credentials    TF_VAR_bucket_name             | TF_VAR_bucket_name ;
-          secret/data/terraform_credentials    TF_VAR_project                 | TF_VAR_project
+          secret/data/terraform_credentials    GOOGLE_APPLICATION_CREDENTIALS    | TF_VAR_GOOGLE_APPLICATION_CREDENTIALS ;
+          secret/data/ckan_credentials         sql_ckan_production_user_password | TF_VAR_sql_ckan_production_user_password ;
+          secret/data/ckan_credentials         sql_ckan_staging_user_password    | TF_VAR_sql_ckan_staging_user_password ;
+          secret/data/metabase_credentials     sql_metabase_user_password        | TF_VAR_sql_metabase_user_password ;
+          secret/data/prefect_credentials      sql_prefect_user_password         | TF_VAR_sql_prefect_user_password
 
-    - name: Checkout
-      uses: actions/checkout@v3
+    - name: Create .tfvars file
+      id: create_tfvars
+      run: |
+        echo 'sql_ckan_production_user_password = "${{ steps.import_secrets.outputs.TF_VAR_sql_ckan_production_user_password }}"' > variables.tfvars
+        echo 'sql_ckan_staging_user_password    = "${{ steps.import_secrets.outputs.TF_VAR_sql_ckan_staging_user_password }}"' >> variables.tfvars
+        echo 'sql_metabase_user_password        = "${{ steps.import_secrets.outputs.TF_VAR_sql_metabase_user_password }}"' >> variables.tfvars
+        echo 'sql_prefect_user_password         = "${{ steps.import_secrets.outputs.TF_VAR_sql_prefect_user_password }}"' >> variables.tfvars
 
     - name: Setup Terraform
       uses: hashicorp/setup-terraform@v2
       with:
         terraform_version: 1.1.9
 
+    - name: Terraform Init
+      id: init
+      run: terraform init
+      env:
+        GOOGLE_CREDENTIALS: ${{ steps.import_secrets.outputs.TF_VAR_GOOGLE_APPLICATION_CREDENTIALS }}
+
     - name: Terraform Format
       id: fmt
       run: terraform fmt -check
-
-    - name: Terraform Init
-      id: init
-      run: terraform init -backend=true
 
     - name: Terraform Validate
       id: validate
@@ -51,9 +63,11 @@ jobs:
 
     - name: Terraform Plan
       id: plan
-      run: terraform plan -no-color -var-file="${{ env.TF_WORKING_DIR }}/terraform.tfvars"
+      run: terraform plan -no-color -var-file=variables.tfvars
+      env:
+        GOOGLE_CREDENTIALS: ${{ steps.import_secrets.outputs.TF_VAR_GOOGLE_APPLICATION_CREDENTIALS }}
 
-    - uses: action/github-script@v6
+    - uses: actions/github-script@v6
       if: github.event_name == 'pull_request'
       env:
         PLAN: "terraform\n${{ steps.plan.outputs.stdout }}"

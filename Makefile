@@ -35,31 +35,46 @@ docker-stop:
 docker-up:
 	docker-compose up
 
-.PHONY: tf-init tf-fmt tf-validate tf-plan tf-apply tf-destroy tf-workspace-list tf-workspace-staging tf-workspace-production
-
-tf-init:
-	docker-compose run --rm bd_terraform init
-
-tf-fmt:
-	docker-compose run --rm bd_terraform fmt --recursive
-
-tf-validate:
-	docker-compose run --rm bd_terraform validate
-
-tf-plan:
-	docker-compose run --rm bd_terraform plan
+.PHONY: tf-apply tf-check tf-destroy tf-fmt tf-init tf-init-ms tf-init-r tf-plan tf-state tf-validate tf-workspace-list tf-workspace-production tf-workspace-staging
 
 tf-apply:
 	docker-compose run --rm bd_terraform apply
 
+tf-apply-ro:
+	docker-compose run --rm bd_terraform apply -refresh-only -var-file="variables.tfvars"
+
+tf-check:
+	docker-compose run --rm bd_terraform fmt -check
+
 tf-destroy:
 	docker-compose run --rm bd_terraform destroy
+
+tf-fmt:
+	docker-compose run --rm bd_terraform fmt --recursive
+
+tf-init:
+	docker-compose run --rm bd_terraform init
+
+tf-init-ms:
+	docker-compose run --rm bd_terraform init -migrate-state
+
+tf-init-r:
+	docker-compose run --rm bd_terraform init -reconfigure
+
+tf-plan:
+	docker-compose run --rm bd_terraform plan -var-file="variables.tfvars"
+
+tf-state:
+	docker-compose run --rm bd_terraform state list
+
+tf-validate:
+	docker-compose run --rm bd_terraform validate
 
 tf-workspace-list:
 	docker-compose run --rm bd_terraform workspace list
 
-tf-workspace-staging:
-	docker-compose run --rm bd_terraform workspace select staging
-
 tf-workspace-production:
 	docker-compose run --rm bd_terraform workspace select production
+
+tf-workspace-staging:
+	docker-compose run --rm bd_terraform workspace select staging
