@@ -1,56 +1,24 @@
-# Configure the Google Cloud provider
-terraform {
-  required_providers {
-    google = {
-      source  = "hashicorp/google"
-      version = "3.89.0"
-    }
-  }
-}
-
-data "terraform_remote_state" "project_id" {
-  backend   = "gcs"
-  workspace = terraform.workspace
-
-  config = {
-    bucket = var.bucket_name
-    prefix = "terraform-project"
-  }
-}
-
-provider "google" {
-  project = var.project_id
-  region  = var.region
-}
-
-# module "networking" {
-#   source     = "./networking"
-#   region     = var.region
-#   project_id = var.project_id
+# module "cloud_sql" {
+#   source = "./cloud_sql"
+#   region                            = var.region
+#   sql_version                       = var.sql_version
+#   sql_instance_tier                 = var.sql_instance_tier
+#   sql_disk_size                     = var.sql_disk_size
+#   sql_disk_autoresize               = var.sql_disk_autoresize
+#   sql_backup_enabled                = var.sql_backup_enabled
+#   sql_ckan_staging_user_name        = var.sql_ckan_staging_user_name
+#   sql_ckan_staging_user_password    = var.sql_ckan_staging_user_password
+#   sql_ckan_staging_db_name          = var.sql_ckan_staging_db_name
+#   sql_ckan_production_user_name     = var.sql_ckan_production_user_name
+#   sql_ckan_production_user_password = var.sql_ckan_production_user_password
+#   sql_ckan_production_db_name       = var.sql_ckan_production_db_name
+#   sql_metabase_user_name            = var.sql_metabase_user_name
+#   sql_metabase_user_password        = var.sql_metabase_user_password
+#   sql_metabase_db_name              = var.sql_metabase_db_name
+#   sql_prefect_user_name             = var.sql_prefect_user_name
+#   sql_prefect_user_password         = var.sql_prefect_user_password
+#   sql_prefect_db_name               = var.sql_prefect_db_name
 # }
-
-module "cloud_sql" {
-  source = "./cloud_sql"
-  # depends_on                        = [module.networking]
-  region                            = var.region
-  sql_version                       = var.sql_version
-  sql_instance_tier                 = var.sql_instance_tier
-  sql_disk_size                     = var.sql_disk_size
-  sql_disk_autoresize               = var.sql_disk_autoresize
-  sql_backup_enabled                = var.sql_backup_enabled
-  sql_ckan_staging_user_name        = var.sql_ckan_staging_user_name
-  sql_ckan_staging_user_password    = var.sql_ckan_staging_user_password
-  sql_ckan_staging_db_name          = var.sql_ckan_staging_db_name
-  sql_ckan_production_user_name     = var.sql_ckan_production_user_name
-  sql_ckan_production_user_password = var.sql_ckan_production_user_password
-  sql_ckan_production_db_name       = var.sql_ckan_production_db_name
-  sql_metabase_user_name            = var.sql_metabase_user_name
-  sql_metabase_user_password        = var.sql_metabase_user_password
-  sql_metabase_db_name              = var.sql_metabase_db_name
-  sql_prefect_user_name             = var.sql_prefect_user_name
-  sql_prefect_user_password         = var.sql_prefect_user_password
-  sql_prefect_db_name               = var.sql_prefect_db_name
-}
 
 module "gke" {
   source                        = "./gke"

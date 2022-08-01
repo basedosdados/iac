@@ -10,12 +10,6 @@ variable "project_id" {
   default     = "basedosdados-dev"
 }
 
-variable "bucket_name" {
-  type        = string
-  description = "Name of the GCS bucket for storing Terraform data"
-  default     = "terraform-data-basedosdados-dev"
-}
-
 variable "region" {
   type        = string
   description = "The GCP region to use for the cluster."
