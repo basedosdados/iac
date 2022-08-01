@@ -38,7 +38,7 @@ docker-up:
 .PHONY: tf-apply tf-check tf-destroy tf-fmt tf-init tf-init-ms tf-init-r tf-plan tf-state tf-validate tf-workspace-list tf-workspace-production tf-workspace-staging
 
 tf-apply:
-	docker-compose run --rm bd_terraform apply
+	docker-compose run --rm bd_terraform apply -var-file=variables.tfvars
 
 tf-apply-ro:
 	docker-compose run --rm bd_terraform apply -refresh-only -var-file="variables.tfvars"
