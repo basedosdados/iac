@@ -35,10 +35,10 @@ jobs:
 
     - name: Add variables.tfvars file
       run: |
-        echo "sql_ckan_production_user_password = $sql_ckan_production_user_password\n
-              sql_ckan_staging_user_password    = $sql_ckan_staging_user_password\n
-              sql_metabase_user_password        = $sql_metabase_user_password\n
-              sql_prefect_user_password         = $sql_prefect_user_password\n" >> variables.tfvars
+        echo "sql_ckan_production_user_password = $sql_ckan_production_user_password" > variables.tfvars
+        echo "sql_ckan_staging_user_password    = $sql_ckan_staging_user_password" >> variables.tfvars
+        echo "sql_metabase_user_password        = $sql_metabase_user_password" >> variables.tfvars
+        echo "sql_prefect_user_password         = $sql_prefect_user_password" >> variables.tfvars
 
     - name: Checkout
       uses: actions/checkout@v3
