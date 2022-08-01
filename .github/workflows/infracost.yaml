@@ -14,10 +14,19 @@ jobs:
       TF_ROOT: terraform/
 
     steps:
+    - name: Import Secrets
+      id: import-secrets
+      uses: hashicorp/vault-action@v2.4.1
+      with:
+        url: https://vault.basedosdados.org
+        token: ${{ secrets.VAULT_TOKEN }}
+        secrets: |
+          secret/data/terraform_credentials    INFRACOST_API_KEY | INFRACOST_API_KEY ;
+
     - name: Setup Infracost
       uses: infracost/actions/setup@v2
       with:
-        api-key: ${{ secrets.INFRACOST_API_KEY }}
+        api-key: $INFRACOST_API_KEY
 
       # Checkout the base branch of the pull request (e.g. main/master).
     - name: Checkout base branch
