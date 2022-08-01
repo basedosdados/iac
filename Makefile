@@ -41,7 +41,7 @@ tf-init:
 	docker-compose run --rm bd_terraform init
 
 tf-fmt:
-	docker-compose run --rm bd_terraform fmt
+	docker-compose run --rm bd_terraform fmt --recursive
 
 tf-validate:
 	docker-compose run --rm bd_terraform validate
