@@ -50,7 +50,7 @@ tf-validate:
 	docker-compose run --rm bd_terraform validate
 
 tf-plan:
-	docker-compose run --rm bd_terraform plan
+	docker-compose run --rm bd_terraform plan -var-file="variables.tfvars"
 
 tf-apply:
 	docker-compose run --rm bd_terraform apply
