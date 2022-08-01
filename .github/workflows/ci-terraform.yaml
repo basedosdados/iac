@@ -43,7 +43,7 @@ jobs:
       id: init
       run: terraform init -backend=true
       env:
-        GOOGLE_APPLICATION_CREDENTIALS: ${{ steps.import_secrets.outputs.TF_VAR_GOOGLE_APPLICATION_CREDENTIALS }}
+        GOOGLE_CREDENTIALS: ${{ steps.import_secrets.outputs.TF_VAR_GOOGLE_APPLICATION_CREDENTIALS }}
 
     - name: Terraform Format
       id: fmt
@@ -57,7 +57,7 @@ jobs:
       id: plan
       run: terraform plan -no-color
       env:
-        GOOGLE_APPLICATION_CREDENTIALS: ${{ steps.import_secrets.outputs.TF_VAR_GOOGLE_APPLICATION_CREDENTIALS }}
+        GOOGLE_CREDENTIALS: ${{ steps.import_secrets.outputs.TF_VAR_GOOGLE_APPLICATION_CREDENTIALS }}
         sql_ckan_production_user_password: ${{ steps.import_secrets.outputs.TF_VAR_sql_ckan_production_user_password }}
         ckan_staging_user_password: ${{ steps.import_secrets.outputs.TF_VAR_sql_ckan_staging_user_password }}
         sql_metabase_user_password: ${{ steps.import_secrets.outputs.TF_VAR_sql_metabase_user_password }}
