@@ -38,10 +38,10 @@ jobs:
 
     - name: Add variables.tfvars file
       run: |
-        echo "sql_ckan_production_user_password = '$sql_ckan_production_user_password'" > variables.tfvars
-        echo "sql_ckan_staging_user_password    = '$sql_ckan_staging_user_password'" >> variables.tfvars
-        echo "sql_metabase_user_password        = '$sql_metabase_user_password'" >> variables.tfvars
-        echo "sql_prefect_user_password         = '$sql_prefect_user_password'" >> variables.tfvars
+        echo 'sql_ckan_production_user_password = "$sql_ckan_production_user_password"' > variables.tfvars
+        echo 'sql_ckan_staging_user_password    = "$sql_ckan_staging_user_password"' >> variables.tfvars
+        echo 'sql_metabase_user_password        = "$sql_metabase_user_password"' >> variables.tfvars
+        echo 'sql_prefect_user_password         = "$sql_prefect_user_password"' >> variables.tfvars
 
     - name: Setup Terraform
       uses: hashicorp/setup-terraform@v2
