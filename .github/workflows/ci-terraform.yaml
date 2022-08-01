@@ -45,7 +45,9 @@ jobs:
       id: init
       run: terraform init -backend=true
       env:
-        GOOGLE_CREDENTIALS: $TF_VAR_GOOGLE_APPLICATION_CREDENTIALS
+        GOOGLE_APPLICATION_CREDENTIALS: $TF_VAR_GOOGLE_APPLICATION_CREDENTIALS
+        TF_VAR_bucket_name: $TF_VAR_bucket_name
+        TF_VAR_project_id: $TF_VAR_project_id
 
     - name: Terraform Format
       id: fmt
@@ -59,7 +61,13 @@ jobs:
       id: plan
       run: terraform plan -no-color
       env:
-        GOOGLE_CREDENTIALS: $TF_VAR_GOOGLE_APPLICATION_CREDENTIALS
+        GOOGLE_APPLICATION_CREDENTIALS: $TF_VAR_GOOGLE_APPLICATION_CREDENTIALS
+        TF_VAR_bucket_name: $TF_VAR_bucket_name
+        TF_VAR_project_id: $TF_VAR_project_id
+        TF_VAR_sql_ckan_production_user_password: $TF_VAR_sql_ckan_production_user_password
+        TF_VAR_sql_ckan_staging_user_password: $TF_VAR_sql_ckan_staging_user_password
+        TF_VAR_sql_metabase_user_password: $TF_VAR_sql_metabase_user_password
+        TF_VAR_sql_prefect_user_password: $TF_VAR_sql_prefect_user_password
 
     - uses: actions/github-script@v6
       if: github.event_name == 'pull_request'
