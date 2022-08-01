@@ -67,6 +67,6 @@ jobs:
 
     - name: Terraform Apply
       id: apply
-      run: terraform apply -auto-approve -var-file=ariables.tfvars
+      run: terraform apply -auto-approve -var-file=variables.tfvars
       env:
         GOOGLE_APPLICATION_CREDENTIALS: ${{ steps.import_secrets.outputs.GOOGLE_APPLICATION_CREDENTIALS }}
