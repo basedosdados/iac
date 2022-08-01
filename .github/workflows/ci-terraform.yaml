@@ -25,9 +25,13 @@ jobs:
         url: https://vault.basedosdados.org
         token: ${{ secrets.VAULT_TOKEN }}
         secrets: |
-          secret/data/terraform_credentials    GOOGLE_APPLICATION_CREDENTIALS | GOOGLE_APPLICATION_CREDENTIALS ;
-          secret/data/terraform_credentials    TF_VAR_bucket_name             | TF_VAR_bucket_name ;
-          secret/data/terraform_credentials    TF_VAR_project_id              | TF_VAR_project_id
+          secret/data/terraform_credentials    GOOGLE_APPLICATION_CREDENTIALS    | GOOGLE_APPLICATION_CREDENTIALS ;
+          secret/data/terraform_credentials    TF_VAR_bucket_name                | TF_VAR_bucket_name ;
+          secret/data/terraform_credentials    TF_VAR_project_id                 | TF_VAR_project_id ;
+          secret/data/ckan_credentials         sql_ckan_production_user_password | sql_ckan_production_user_password ;
+          secret/data/ckan_credentials         sql_ckan_staging_user_password    | sql_ckan_staging_user_password ;
+          secret/data/metabase_credentials     sql_metabase_user_password        | sql_metabase_user_password ;
+          secret/data/prefect_credentials      sql_prefect_user_password         | sql_prefect_user_password
 
     - name: Checkout
       uses: actions/checkout@v3
@@ -51,7 +55,7 @@ jobs:
 
     - name: Terraform Plan
       id: plan
-      run: terraform plan -no-color -var-file="${{ env.TF_WORKING_DIR }}/variables.tf"
+      run: terraform plan -no-color -var-file="variables.tf"
 
     - uses: actions/github-script@v6
       if: github.event_name == 'pull_request'
