@@ -35,7 +35,10 @@ docker-stop:
 docker-up:
 	docker-compose up
 
-.PHONY: tf-init tf-fmt tf-validate tf-plan tf-apply tf-destroy tf-workspace-list tf-workspace-staging tf-workspace-production
+.PHONY: tf-check tf-init tf-fmt tf-validate tf-plan tf-apply tf-destroy tf-workspace-list tf-workspace-staging tf-workspace-production
+
+tf-check:
+	docker-compose run --rm bd_terraform fmt -check
 
 tf-init:
 	docker-compose run --rm bd_terraform init
