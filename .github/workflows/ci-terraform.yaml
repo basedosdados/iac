@@ -33,16 +33,15 @@ jobs:
           secret/data/metabase_credentials     sql_metabase_user_password        | sql_metabase_user_password ;
           secret/data/prefect_credentials      sql_prefect_user_password         | sql_prefect_user_password
 
+    - name: Checkout
+      uses: actions/checkout@v3
+
     - name: Add variables.tfvars file
       run: |
-        touch variables.tfvars
         echo "sql_ckan_production_user_password = '$sql_ckan_production_user_password'" > variables.tfvars
         echo "sql_ckan_staging_user_password    = '$sql_ckan_staging_user_password'" >> variables.tfvars
         echo "sql_metabase_user_password        = '$sql_metabase_user_password'" >> variables.tfvars
         echo "sql_prefect_user_password         = '$sql_prefect_user_password'" >> variables.tfvars
-
-    - name: Checkout
-      uses: actions/checkout@v3
 
     - name: Setup Terraform
       uses: hashicorp/setup-terraform@v2
