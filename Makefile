@@ -38,10 +38,10 @@ docker-up:
 .PHONY: tf-apply tf-check tf-destroy tf-fmt tf-init tf-init-ms tf-init-r tf-plan tf-state tf-validate tf-workspace-list tf-workspace-production tf-workspace-staging
 
 tf-apply:
-	docker-compose run --rm bd_terraform apply -var-file=variables.tfvars
+	docker-compose run --rm bd_terraform apply
 
 tf-apply-ro:
-	docker-compose run --rm bd_terraform apply -refresh-only -var-file="variables.tfvars"
+	docker-compose run --rm bd_terraform apply -refresh-only
 
 tf-check:
 	docker-compose run --rm bd_terraform fmt -check
@@ -62,7 +62,7 @@ tf-init-r:
 	docker-compose run --rm bd_terraform init -reconfigure
 
 tf-plan:
-	docker-compose run --rm bd_terraform plan -var-file="variables.tfvars"
+	docker-compose run --rm bd_terraform plan
 
 tf-state:
 	docker-compose run --rm bd_terraform state list
