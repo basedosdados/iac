@@ -1,5 +1,5 @@
 #
-# helm upgrade --install filebeat elastic/filebeat --version 7.17.3 -f values.yaml -n elastic
+# helm upgrade --install filebeat elastic/filebeat -f values.yaml -n elastic
 #
 daemonset:
   # Annotations to apply to the daemonset
