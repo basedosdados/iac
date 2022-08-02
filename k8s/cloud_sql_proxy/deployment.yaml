@@ -4,6 +4,7 @@ metadata:
   labels:
     app: cloud-sql-proxy
   name: cloud-sql-proxy
+  namespace: cloud-sql-proxy
 spec:
   selector:
     matchLabels:
@@ -17,20 +18,20 @@ spec:
     spec:
       serviceAccountName: cloud-sql-access
       containers:
-        - name: cloud-sql-proxy
-          image: gcr.io/cloudsql-docker/gce-proxy:1.23.0
-          ports:
-            - containerPort: 5432
-              protocol: TCP
-          envFrom:
-            - configMapRef:
-                name: cloud-sql-instance
-          command:
-            - "/cloud_sql_proxy"
-            - "-instances=$(CLOUD_SQL_PROJECT_ID):$(CLOUD_SQL_INSTANCE_REGION):$(CLOUD_SQL_INSTANCE_NAME)=tcp:0.0.0.0:5432"
-          securityContext:
-            runAsNonRoot: true
-          resources:
-            requests:
-              memory: 256Mi
-              cpu: 100m
+      - name: cloud-sql-proxy
+        image: gcr.io/cloudsql-docker/gce-proxy:1.23.0
+        ports:
+        - containerPort: 5432
+          protocol: TCP
+        envFrom:
+        - configMapRef:
+            name: cloud-sql-instance
+        command:
+        - /cloud_sql_proxy
+        - -instances=$(CLOUD_SQL_PROJECT_ID):$(CLOUD_SQL_INSTANCE_REGION):$(CLOUD_SQL_INSTANCE_NAME)=tcp:0.0.0.0:5432
+        securityContext:
+          runAsNonRoot: true
+        resources:
+          requests:
+            memory: 256Mi
+            cpu: 100m

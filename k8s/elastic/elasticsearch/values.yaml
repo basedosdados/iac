@@ -1,5 +1,5 @@
 #
-# helm upgrade --install elasticsearch elastic/elasticsearch --version 7.17.3 -f values.yaml -n elastic
+# helm upgrade --install elasticsearch elastic/elasticsearch -f values.yaml -n elastic
 #
 clusterName: elasticsearch
 nodeGroup: master

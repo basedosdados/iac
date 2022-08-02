@@ -1,5 +1,5 @@
 #
-# helm upgrade --install logstash elastic/logstash --version 7.17.3 -f values.yaml -n elastic
+# helm upgrade --install logstash elastic/logstash -f values.yaml -n elastic
 #
 replicas: 1
 
