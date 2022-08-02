@@ -57,4 +57,4 @@ jobs:
       id: apply
       run: terraform apply -auto-approve
       env:
-        GOOGLE_CREDENTIALS: ${{ steps.import_secrets.outputs.GOOGLE_APPLICATION_CREDENTIALS }}
+        GOOGLE_CREDENTIALS: ${{ steps.import_secrets.outputs.TF_VAR_GOOGLE_APPLICATION_CREDENTIALS }}
