@@ -1,16 +1,16 @@
 pull_request_rules:
-  - name: Automatic Update For Pull Requests
-    conditions:
-      - -conflict
-      - -draft
-    actions:
-      update:
-  - name: Warn Author On Conflicts
-    conditions:
+- name: Automatic Update For Pull Requests
+  conditions:
+  - -conflict
+  - -draft
+  actions:
+    update:
+- name: Warn Author On Conflicts
+  conditions:
+  - conflict
+  actions:
+    comment:
+      message: Hey, @{{author}}! This pull request has conflicts 😩
+    label:
+      add:
       - conflict
-    actions:
-      comment:
-        message: "Hey, @{{author}}! This pull request has conflicts 😩"
-      label:
-        add:
-          - conflict

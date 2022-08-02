@@ -4,11 +4,12 @@ metadata:
   labels:
     app: cloud-sql-proxy
   name: cloud-sql-proxy
+  namespace: cloud-sql-proxy
 spec:
   ports:
-    - port: 5432
-      protocol: TCP
-      name: cloud-sql-proxy
-      targetPort: 5432
+  - port: 5432
+    protocol: TCP
+    name: cloud-sql-proxy
+    targetPort: 5432
   selector:
     app: cloud-sql-proxy

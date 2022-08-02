@@ -1,5 +1,5 @@
 #
-# helm upgrade --install kibana elastic/kibana --version 7.17.3 -f values.yaml -n elastic
+# helm upgrade --install kibana elastic/kibana -f values.yaml -n elastic
 #
 elasticsearchHosts: http://elasticsearch-master:9200
 

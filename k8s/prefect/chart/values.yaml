@@ -2,16 +2,13 @@
 # helm upgrade --install prefect -n prefect prefecthq/prefect-server -f values.yaml
 # helm upgrade --install prefect -n prefect ../../../../server/helm/prefect-server/. -f values.yaml
 #
+serverVersionTag: core-0.15.9
 
----
-serverVersionTag: "core-0.15.9"
+prefectVersionTag: 0.15.9
 
-prefectVersionTag: "0.15.9"
+uiVersionTag: latest
 
-uiVersionTag: "latest"
-
-imagePullSecrets:
-  []
+imagePullSecrets: []
 
 annotations: {}
 
@@ -20,7 +17,7 @@ postgresql:
   postgresqlUsername: prefect
   existingSecret: postgresql-password
   servicePort: 5432
-  externalHostname: "cloud-sql-proxy"
+  externalHostname: cloud-sql-proxy
   useSubChart: false
 
   persistence:
@@ -39,7 +36,7 @@ postgresql:
 prefectConfig:
   services:
     towel:
-      max_scheduled_runs_per_flow: "50"
+      max_scheduled_runs_per_flow: '50'
 
 hasura:
   image:
@@ -61,11 +58,11 @@ hasura:
   env: []
   resources:
     limits:
-      cpu: "500m"
-      memory: "1Gi"
+      cpu: 500m
+      memory: 1Gi
     requests:
-      cpu: "100m"
-      memory: "256Mi"
+      cpu: 100m
+      memory: 256Mi
   nodeSelector: {}
   tolerations: []
   affinity: {}
@@ -73,7 +70,7 @@ hasura:
 graphql:
   image:
     name: prefecthq/server
-    tag: null
+    tag:
     pullPolicy: Always
     pullSecrets: []
 
@@ -90,11 +87,11 @@ graphql:
   env: {}
   resources:
     limits:
-      cpu: "500m"
-      memory: "1Gi"
+      cpu: 500m
+      memory: 1Gi
     requests:
-      cpu: "100m"
-      memory: "256Mi"
+      cpu: 100m
+      memory: 256Mi
   nodeSelector: {}
   tolerations: []
   affinity: {}
@@ -106,7 +103,7 @@ graphql:
 apollo:
   image:
     name: prefecthq/apollo
-    tag: null
+    tag:
     pullPolicy: Always
     pullSecrets: []
 
@@ -133,11 +130,11 @@ apollo:
   env: {}
   resources:
     limits:
-      cpu: "500m"
-      memory: "1Gi"
+      cpu: 500m
+      memory: 1Gi
     requests:
-      cpu: "100m"
-      memory: "256Mi"
+      cpu: 100m
+      memory: 256Mi
   nodeSelector: {}
   tolerations: []
   affinity: {}
@@ -145,7 +142,7 @@ apollo:
 ui:
   image:
     name: prefecthq/ui
-    tag: null
+    tag:
     pullPolicy: Always
     pullSecrets: []
 
@@ -177,7 +174,7 @@ ui:
 towel:
   image:
     name: prefecthq/server
-    tag: null
+    tag:
     pullPolicy: Always
     pullSecrets: []
 
@@ -196,11 +193,11 @@ towel:
 agent:
   enabled: true
   prefectLabels:
-    - basedosdados-dev
-  jobTemplateFilePath: "https://storage.googleapis.com/basedosdados-dev/prefect_job_template/job_template.yaml"
+  - basedosdados-dev
+  jobTemplateFilePath: https://storage.googleapis.com/basedosdados-dev/prefect_job_template/job_template.yaml
   image:
     name: prefecthq/prefect
-    tag: null
+    tag:
     pullPolicy: Always
     pullSecrets: []
 
@@ -223,17 +220,17 @@ agent:
   job:
     resources:
       limits:
-        memory: ""
-        cpu: ""
+        memory: ''
+        cpu: ''
       requests:
-        memory: ""
-        cpu: ""
-    imagePullPolicy: ""
+        memory: ''
+        cpu: ''
+    imagePullPolicy: ''
     imagePullSecrets: []
 
 serviceAccount:
   create: true
-  name: null
+  name:
 
 jobs:
   createTenant:
@@ -243,7 +240,7 @@ jobs:
       slug: default
     image:
       name: prefecthq/prefect
-      tag: null
+      tag:
       pullPolicy: Always
       pullSecrets: []
     labels: {}
