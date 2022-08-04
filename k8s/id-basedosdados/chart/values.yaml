@@ -22,8 +22,15 @@ ingress:
   # Host to be used in the ingress rules.
   host: id.basedosdados.org
   # Annotations to be added to the ingress.
-  annotations: {}
+  annotations:
+    kubernetes.io/ingress.class: nginx
+    nginx.ingress.kubernetes.io/rewrite-target: /auth/
+    cert-manager.io/issuer: letsencrypt-production
+    nginx.ingress.kubernetes.io/ssl-redirect: 'true'
   # TLS configuration.
-  tls: []
+  tls:
+  - hosts:
+    - id.basedosdados.org
+    secretName: id-basedosdados-tls
   # Django admin URLs prefix.
   admin_prefix: /admin/
