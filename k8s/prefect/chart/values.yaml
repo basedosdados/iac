@@ -143,7 +143,7 @@ ui:
     pullPolicy: Always
     pullSecrets: []
 
-  apolloApiUrl: https://prefect.dados.org/api
+  apolloApiUrl: https://prefect.basedosdados.org/api
 
   service:
     type: ClusterIP
