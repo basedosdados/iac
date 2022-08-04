@@ -3,7 +3,7 @@ version: '3.9'
 services:
   bd_terraform:
     env_file:
-    - ./terraform/.env
+    - terraform/.env
     image: hashicorp/terraform:1.1.9
     container_name: bd_terraform
     volumes:
