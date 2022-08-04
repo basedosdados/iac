@@ -6,7 +6,7 @@ namespace:
 # Deployment configurations.
 deployment:
   # Number of replicas for this deployment. Any number greater than 1 hasn't been properly tested.
-  replicas: 2
+  replicas: 1
   # The image to be deployed. We don't usually recommend setting the tag to `latest`, but this is
   # default value for easing simple deployments.
   image: ghcr.io/prefeitura-rio/id-dados-rio:latest
