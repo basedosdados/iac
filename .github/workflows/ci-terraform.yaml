@@ -28,7 +28,11 @@ jobs:
         url: https://vault.basedosdados.org
         token: ${{ secrets.VAULT_TOKEN }}
         secrets: |
-          secret/data/terraform_credentials GOOGLE_APPLICATION_CREDENTIALS | TF_VAR_GOOGLE_APPLICATION_CREDENTIALS
+          secret/data/ckan_credentials      sql_ckan_production_user_password | TF_VAR_sql_ckan_production_user_password ;
+          secret/data/ckan_credentials      sql_ckan_staging_user_password    | TF_VAR_sql_ckan_staging_user_password ;
+          secret/data/metabase_credentials  sql_metabase_user_password        | TF_VAR_sql_metabase_user_password ;
+          secret/data/prefect_credentials   sql_prefect_user_password         | TF_VAR_sql_prefect_user_password ;
+          secret/data/terraform_credentials GOOGLE_APPLICATION_CREDENTIALS    | TF_VAR_GOOGLE_APPLICATION_CREDENTIALS
 
     - name: Setup Terraform
       uses: hashicorp/setup-terraform@v2
@@ -54,6 +58,10 @@ jobs:
       run: terraform plan -no-color
       env:
         GOOGLE_CREDENTIALS: ${{ steps.import_secrets.outputs.TF_VAR_GOOGLE_APPLICATION_CREDENTIALS }}
+        TF_VAR_sql_ckan_production_user_password: ${{ steps.import_secrets.outputs.TF_VAR_sql_ckan_production_user_password }}
+        TF_VAR_sql_ckan_staging_user_password: ${{ steps.import_secrets.outputs.TF_VAR_sql_ckan_staging_user_password }}
+        TF_VAR_sql_metabase_user_password: ${{ steps.import_secrets.outputs.TF_VAR_sql_metabase_user_password }}
+        TF_VAR_sql_prefect_user_password: ${{ steps.import_secrets.outputs.TF_VAR_sql_prefect_user_password }}
 
     - uses: actions/github-script@v6
       if: github.event_name == 'pull_request'
