@@ -133,23 +133,23 @@ service:
   httpPortName: http
 
 ingress:
-  enabled: false
+  enabled: true
   className: nginx
   pathtype: ImplementationSpecific
-  annotations: {}
-    # nginx.ingress.kubernetes.io/rewrite-target: /
-    # nginx.ingress.kubernetes.io/auth-url: https://id.basedosdados.org/auth/
-    # nginx.ingress.kubernetes.io/auth-signin: https://id.basedosdados.org/auth/login/?rd=https://$host$request_uri$is_args$args
-    # cert-manager.io/issuer: letsencrypt-production
-    # nginx.ingress.kubernetes.io/ssl-redirect: 'true'
+  annotations:
+    nginx.ingress.kubernetes.io/rewrite-target: /
+    nginx.ingress.kubernetes.io/auth-url: https://id.basedosdados.org/auth/
+    nginx.ingress.kubernetes.io/auth-signin: https://id.basedosdados.org/auth/login/?rd=https://$host$request_uri$is_args$args
+    cert-manager.io/issuer: letsencrypt-production
+    nginx.ingress.kubernetes.io/ssl-redirect: 'true'
   hosts:
   - host: elastic.basedosdados.org
     paths:
     - path: /
-  # tls:
-  # - secretName: elastic-tls
-  #   hosts:
-  #   - elastic.basedosdados.org
+  tls:
+  - hosts:
+    - elastic.basedosdados.org
+    secretName: elastic-tls
 
 readinessProbe:
   failureThreshold: 3

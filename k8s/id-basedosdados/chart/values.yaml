@@ -1,0 +1,33 @@
+# helm upgrade --install id-basedosdados prefeitura-rio/id-server -n id-basedosdados -f values.yaml
+# Namespace configurations. All of this chart will be deployed in this namespace.
+namespace:
+  name: id-basedosdados
+
+# Deployment configurations.
+deployment:
+  # Number of replicas for this deployment. Any number greater than 1 hasn't been properly tested.
+  replicas: 1
+  # The image to be deployed. We don't usually recommend setting the tag to `latest`, but this is
+  # default value for easing simple deployments.
+  image: ghcr.io/prefeitura-rio/id-dados-rio:latest
+  # This is the name of the secrets that must contain all environment variables
+  # needed by the image. Check the documentation at https://github.com/prefeitura-rio/id-dados-rio/
+  envFromSecret: id-basedosdados-secrets
+
+# Ingress configurations.
+ingress:
+  # Whether to enable or not the ingress.
+  enabled: true
+  # Host to be used in the ingress rules.
+  host: id.basedosdados.org
+  # Annotations to be added to the ingress.
+  annotations:
+    cert-manager.io/issuer: letsencrypt-production
+    nginx.ingress.kubernetes.io/ssl-redirect: 'true'
+  # TLS configuration.
+  tls:
+  - hosts:
+    - id.basedosdados.org
+    secretName: id-basedosdados-tls
+  # Django admin URLs prefix.
+  admin_prefix: /admin/
