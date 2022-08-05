@@ -14,16 +14,14 @@ sql_disk_autoresize               = true
 sql_backup_enabled                = true
 sql_backup_start_time             = "00:00"
 sql_ckan_production_user_name     = "ckan_production"
-sql_ckan_production_user_password = "ckan_production"
 sql_ckan_production_db_name       = "ckan_production"
 sql_ckan_staging_user_name        = "ckan_staging"
-sql_ckan_staging_user_password    = "ckan_staging"
 sql_ckan_staging_db_name          = "ckan_staging"
+sql_id_basedosdados_user_name     = "id_basedosdados"
+sql_id_basedosdados_db_name       = "id_basedosdados"
 sql_metabase_user_name            = "metabase"
-sql_metabase_user_password        = "metabase"
 sql_metabase_db_name              = "metabase"
 sql_prefect_user_name             = "prefect"
-sql_prefect_user_password         = "prefect"
 sql_prefect_db_name               = "prefect"
 ############################################################################
 # GKE

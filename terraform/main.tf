@@ -35,6 +35,9 @@ module "cloudsql" {
   sql_ckan_staging_user_name        = var.sql_ckan_staging_user_name
   sql_ckan_staging_user_password    = var.sql_ckan_staging_user_password
   sql_ckan_staging_db_name          = var.sql_ckan_staging_db_name
+  sql_id_basedosdados_user_name     = var.sql_id_basedosdados_user_name
+  sql_id_basedosdados_user_password = var.sql_id_basedosdados_user_password
+  sql_id_basedosdados_db_name       = var.sql_id_basedosdados_db_name
   sql_metabase_user_name            = var.sql_metabase_user_name
   sql_metabase_user_password        = var.sql_metabase_user_password
   sql_metabase_db_name              = var.sql_metabase_db_name

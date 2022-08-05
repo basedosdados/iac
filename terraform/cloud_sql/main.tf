@@ -47,6 +47,17 @@ resource "google_sql_database" "ckan_staging" {
   instance = google_sql_database_instance.main.name
 }
 
+resource "google_sql_database" "id_basedosdados" {
+  name     = var.sql_id_basedosdados_db_name
+  instance = google_sql_database_instance.main.name
+}
+
+resource "google_sql_user" "id_basedosdados" {
+  name     = var.sql_id_basedosdados_user_name
+  instance = google_sql_database_instance.main.name
+  password = var.sql_ckan_production_user_password
+}
+
 resource "google_sql_user" "metabase" {
   name     = var.sql_metabase_user_name
   instance = google_sql_database_instance.main.name
