@@ -9,9 +9,10 @@ resource "google_sql_database_instance" "main" {
   deletion_protection = false
 
   settings {
-    tier            = var.sql_instance_tier
-    disk_size       = var.sql_disk_size
-    disk_autoresize = var.sql_disk_autoresize
+    tier                  = var.sql_instance_tier
+    disk_size             = var.sql_disk_size
+    disk_autoresize       = var.sql_disk_autoresize
+    disk_autoresize_limit = var.sql_disk_autoresize_limit
 
     backup_configuration {
       enabled    = var.sql_backup_enabled
@@ -20,7 +21,11 @@ resource "google_sql_database_instance" "main" {
 
     database_flags {
       name  = "max_connections"
-      value = "500"
+      value = var.sql_db_max_connections
+    }
+
+    location_preference {
+      zone = var.zone
     }
   }
 }
@@ -47,13 +52,13 @@ resource "google_sql_database" "ckan_staging" {
   instance = google_sql_database_instance.main.name
 }
 
-resource "google_sql_database" "id_basedosdados" {
-  name     = var.sql_id_basedosdados_db_name
+resource "google_sql_database" "id_server" {
+  name     = var.sql_id_server_db_name
   instance = google_sql_database_instance.main.name
 }
 
-resource "google_sql_user" "id_basedosdados" {
-  name     = var.sql_id_basedosdados_user_name
+resource "google_sql_user" "id_server" {
+  name     = var.sql_id_server_user_name
   instance = google_sql_database_instance.main.name
   password = var.sql_ckan_production_user_password
 }

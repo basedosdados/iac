@@ -39,6 +39,11 @@ variable "sql_disk_autoresize" {
   description = "Whether the disk for the Cloud SQL instance should be resized automatically."
 }
 
+variable "sql_disk_autoresize_limit" {
+  type        = number
+  description = "The maximum size of the disk auto resize for the Cloud SQL instance."
+}
+
 variable "sql_backup_enabled" {
   type        = bool
   description = "Whether the Cloud SQL instance should have backup enabled."
@@ -49,25 +54,33 @@ variable "sql_backup_start_time" {
   description = "The time at which the backup should start."
 }
 
+variable "sql_db_max_connections" {
+  type        = number
+  description = "The maximum number of connections for the Cloud SQL instance."
+}
+
 variable "sql_ckan_production_user_name" {
   type        = string
-  description = "The name of the CKAN production user."
+  description = "The name of the CKAN production database user."
+  default     = "ckan_production"
 }
 
 variable "sql_ckan_production_user_password" {
   type        = string
-  description = "The password of the CKAN production user."
+  description = "The password of the CKAN production database user."
   sensitive   = true
 }
 
 variable "sql_ckan_production_db_name" {
   type        = string
   description = "The name of the CKAN production database."
+  default     = "ckan_production"
 }
 
 variable "sql_ckan_staging_user_name" {
   type        = string
-  description = "The name of the CKAN staging user."
+  description = "The name of the CKAN staging database user."
+  default     = "ckan_staging"
 }
 
 variable "sql_ckan_staging_user_password" {
@@ -79,54 +92,61 @@ variable "sql_ckan_staging_user_password" {
 variable "sql_ckan_staging_db_name" {
   type        = string
   description = "The name of the CKAN staging database."
+  default     = "ckan_staging"
 }
 
-variable "sql_id_basedosdados_user_name" {
+variable "sql_id_server_user_name" {
   type        = string
-  description = "The name of the ID basedosdados user."
+  description = "The name of the ID server database user."
+  default     = "id_basedosdados"
 }
 
-variable "sql_id_basedosdados_user_password" {
+variable "sql_id_server_user_password" {
   type        = string
-  description = "The password of the ID basedosdados user."
+  description = "The password of the ID server database user."
   sensitive   = true
 }
 
-variable "sql_id_basedosdados_db_name" {
+variable "sql_id_server_db_name" {
   type        = string
-  description = "The name of the ID basedosdados database."
+  description = "The name of the ID server database."
+  default     = "id_basedosdados"
 }
 
 variable "sql_metabase_user_name" {
   type        = string
-  description = "The name of the Metabase user."
+  description = "The name of the Metabase database user."
+  default     = "metabase"
 }
 
 variable "sql_metabase_user_password" {
   type        = string
-  description = "The password of the Metabase user."
+  description = "The password of the Metabase database user."
   sensitive   = true
 }
 
 variable "sql_metabase_db_name" {
   type        = string
   description = "The name of the Metabase database."
+  default     = "metabase"
 }
 
 variable "sql_prefect_user_name" {
   type        = string
-  description = "The name of the user to create for the Prefect database."
+  description = "The name of the Prefect database user."
+  default     = "prefect"
 }
 
 variable "sql_prefect_user_password" {
   type        = string
-  description = "The password of the user to create for the Prefect database."
+  description = "The password of the Prefect database user."
   sensitive   = true
 }
 
 variable "sql_prefect_db_name" {
   type        = string
   description = "The name of the Prefect database."
+  default     = "prefect"
 }
 
 ############################################################################
