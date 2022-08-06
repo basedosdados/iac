@@ -28,8 +28,8 @@ jobs:
         url: https://vault.basedosdados.org
         token: ${{ secrets.VAULT_TOKEN }}
         secrets: |
-          secret/data/terraform_credentials TF_VAR_SENSITIVE_DATA          | TF_VAR_SENSITIVE_DATA ;
-          secret/data/terraform_credentials GCP_SA                         | TF_VAR_GOOGLE_CREDENTIALS
+          secret/data/terraform_credentials GCP_SA                | TF_VAR_GCP_SA ;
+          secret/data/terraform_credentials TF_VAR_SENSITIVE_DATA | TF_VAR_SENSITIVE_DATA
 
     - name: Setup Terraform
       uses: hashicorp/setup-terraform@v2
@@ -40,7 +40,7 @@ jobs:
       id: init
       run: terraform init
       env:
-        GOOGLE_CREDENTIALS: ${{ steps.import_secrets.outputs.TF_VAR_GOOGLE_CREDENTIALS }}
+        GOOGLE_CREDENTIALS: ${{ steps.import_secrets.outputs.TF_VAR_GCP_SA }}
 
     - name: Terraform Format
       id: fmt
@@ -56,7 +56,7 @@ jobs:
         source {{ steps.import_secrets.outputs.TF_VAR_SENSITIVE_DATA }} && \
         terraform plan -no-color
       env:
-        GOOGLE_CREDENTIALS: ${{ steps.import_secrets.outputs.TF_VAR_GOOGLE_CREDENTIALS }}
+        GOOGLE_CREDENTIALS: ${{ steps.import_secrets.outputs.TF_VAR_GCP_SA }}
 
     - uses: actions/github-script@v6
       if: github.event_name == 'pull_request'

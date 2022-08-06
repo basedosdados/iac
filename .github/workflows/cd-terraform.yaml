@@ -32,11 +32,8 @@ jobs:
         url: https://vault.basedosdados.org
         token: ${{ secrets.VAULT_TOKEN }}
         secrets: |
-          secret/data/ckan_credentials      sql_ckan_production_user_password | TF_VAR_sql_ckan_production_user_password ;
-          secret/data/ckan_credentials      sql_ckan_staging_user_password    | TF_VAR_sql_ckan_staging_user_password ;
-          secret/data/metabase_credentials  sql_metabase_user_password        | TF_VAR_sql_metabase_user_password ;
-          secret/data/prefect_credentials   sql_prefect_user_password         | TF_VAR_sql_prefect_user_password ;
-          secret/data/terraform_credentials GOOGLE_APPLICATION_CREDENTIALS    | TF_VAR_GOOGLE_APPLICATION_CREDENTIALS
+          secret/data/terraform_credentials GCP_SA                | TF_VAR_GCP_SA ;
+          secret/data/terraform_credentials TF_VAR_SENSITIVE_DATA | TF_VAR_SENSITIVE_DATA
 
     - name: Setup Terraform
       uses: hashicorp/setup-terraform@v2
@@ -47,7 +44,7 @@ jobs:
       id: init
       run: terraform init
       env:
-        GOOGLE_CREDENTIALS: ${{ steps.import_secrets.outputs.TF_VAR_GOOGLE_APPLICATION_CREDENTIALS }}
+        GOOGLE_CREDENTIALS: ${{ steps.import_secrets.outputs.TF_VAR_GCP_SA }}
 
     - name: Terraform Format
       id: fmt
@@ -59,10 +56,8 @@ jobs:
 
     - name: Terraform Apply
       id: apply
-      run: terraform apply -auto-approve
+      run: |
+        source {{ steps.import_secrets.outputs.TF_VAR_SENSITIVE_DATA }} && \
+        terraform apply -auto-approve
       env:
-        GOOGLE_CREDENTIALS: ${{ steps.import_secrets.outputs.TF_VAR_GOOGLE_APPLICATION_CREDENTIALS }}
-        TF_VAR_sql_ckan_production_user_password: ${{ steps.import_secrets.outputs.TF_VAR_sql_ckan_production_user_password }}
-        TF_VAR_sql_ckan_staging_user_password: ${{ steps.import_secrets.outputs.TF_VAR_sql_ckan_staging_user_password }}
-        TF_VAR_sql_metabase_user_password: ${{ steps.import_secrets.outputs.TF_VAR_sql_metabase_user_password }}
-        TF_VAR_sql_prefect_user_password: ${{ steps.import_secrets.outputs.TF_VAR_sql_prefect_user_password }}
+        GOOGLE_CREDENTIALS: ${{ steps.import_secrets.outputs.TF_VAR_GCP_SA }}
