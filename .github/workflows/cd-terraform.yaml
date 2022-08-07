@@ -57,9 +57,8 @@ jobs:
     - name: Terraform Apply
       id: apply
       run: |
-        echo "$TF_VAR_SENSITIVE_DATA" > .env
+        echo "$'${{ steps.import_secrets.outputs.TF_VAR_SENSITIVE_DATA }}'" > .env
         source .env
         terraform apply -auto-approve
       env:
         GOOGLE_CREDENTIALS: ${{ steps.import_secrets.outputs.TF_VAR_GCP_SA }}
-        TF_VAR_SENSITIVE_DATA: ${{ steps.import_secrets.outputs.TF_VAR_SENSITIVE_DATA }}
