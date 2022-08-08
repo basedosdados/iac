@@ -53,8 +53,7 @@ jobs:
     - name: Terraform Plan
       id: plan
       run: |
-        echo -e "${{ steps.import_secrets.outputs.TF_VAR_SENSITIVE_DATA }}" > .env
-        source .env
+        echo -e ${{ steps.import_secrets.outputs.TF_VAR_SENSITIVE_DATA }} >> terraform.tfvars
         terraform plan -no-color
       env:
         GOOGLE_CREDENTIALS: ${{ steps.import_secrets.outputs.TF_VAR_GCP_SA }}
