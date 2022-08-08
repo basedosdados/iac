@@ -21,7 +21,7 @@ jobs:
         url: https://vault.basedosdados.org
         token: ${{ secrets.VAULT_TOKEN }}
         secrets: |
-          secret/data/terraform_credentials INFRACOST_API_KEY | INFRACOST_API_KEY
+          secret/data/terraform_credentials/basedosdados-dev INFRACOST_API_KEY | INFRACOST_API_KEY
 
     - name: Setup Infracost
       uses: infracost/actions/setup@v2
