@@ -28,7 +28,12 @@ jobs:
         url: https://vault.basedosdados.org
         token: ${{ secrets.VAULT_TOKEN }}
         secrets: |
-          secret/data/terraform_credentials GOOGLE_APPLICATION_CREDENTIALS | TF_VAR_GOOGLE_APPLICATION_CREDENTIALS
+          secret/data/terraform_credentials/basedosdados-dev  GCP_SA                                   | TF_VAR_GCP_SA ;
+          secret/data/ckan_credentials                        TF_VAR_sql_ckan_production_user_password | TF_VAR_sql_ckan_production_user_password ;
+          secret/data/ckan_credentials                        TF_VAR_sql_ckan_staging_user_password    | TF_VAR_sql_ckan_staging_user_password ;
+          secret/data/id_server_credentials/basedosdados      TF_VAR_sql_id_server_user_password       | TF_VAR_sql_id_server_user_password ;
+          secret/data/metabase_credentials/basedosdados       TF_VAR_sql_metabase_user_password        | TF_VAR_sql_metabase_user_password ;
+          secret/data/prefect_credentials/basedosdados        TF_VAR_sql_prefect_user_password         | TF_VAR_sql_prefect_user_password
 
     - name: Setup Terraform
       uses: hashicorp/setup-terraform@v2
@@ -39,7 +44,7 @@ jobs:
       id: init
       run: terraform init
       env:
-        GOOGLE_CREDENTIALS: ${{ steps.import_secrets.outputs.TF_VAR_GOOGLE_APPLICATION_CREDENTIALS }}
+        GOOGLE_CREDENTIALS: ${{ steps.import_secrets.outputs.TF_VAR_GCP_SA }}
 
     - name: Terraform Format
       id: fmt
@@ -51,9 +56,16 @@ jobs:
 
     - name: Terraform Plan
       id: plan
-      run: terraform plan -no-color
+      run: |
+        echo -e ${{ steps.import_secrets.outputs.TF_VAR_SENSITIVE_DATA }} >> terraform.tfvars
+        terraform plan -no-color
       env:
-        GOOGLE_CREDENTIALS: ${{ steps.import_secrets.outputs.TF_VAR_GOOGLE_APPLICATION_CREDENTIALS }}
+        GOOGLE_CREDENTIALS: ${{ steps.import_secrets.outputs.TF_VAR_GCP_SA }}
+        TF_VAR_sql_ckan_production: ${{ steps.import_secrets.outputs.TF_VAR_sql_ckan_production }}
+        TF_VAR_sql_ckan_staging: ${{ steps.import_secrets.outputs.TF_VAR_sql_ckan_staging }}
+        TF_VAR_sql_id_server: ${{ steps.import_secrets.outputs.TF_VAR_sql_id_server }}
+        TF_VAR_sql_metabase: ${{ steps.import_secrets.outputs.TF_VAR_sql_metabase }}
+        TF_VAR_sql_prefect: ${{ steps.import_secrets.outputs.TF_VAR_sql_prefect }}
 
     - uses: actions/github-script@v6
       if: github.event_name == 'pull_request'
