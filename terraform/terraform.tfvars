@@ -30,3 +30,6 @@ dynamic_pool_node_preemptible = true
 ############################################################################
 gsa_cloudsql_account_id         = "gsa-cloudsql"
 role_iam_workload_identity_user = "roles/iam.workloadIdentityUser"
+############################################################################
+# Sensitive data that are inputed by CI/CD pipeline
+############################################################################
