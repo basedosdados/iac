@@ -26,6 +26,7 @@ module "cloudsql" {
   project_id                        = var.project_id
   sql_version                       = var.sql_version
   sql_instance_tier                 = var.sql_instance_tier
+  sql_deletion_protection           = var.sql_deletion_protection
   sql_disk_size                     = var.sql_disk_size
   sql_disk_autoresize               = var.sql_disk_autoresize
   sql_disk_autoresize_limit         = var.sql_disk_autoresize_limit

@@ -9,6 +9,7 @@ zone       = "us-central1-c"
 ############################################################################
 sql_version               = "POSTGRES_13"
 sql_instance_tier         = "db-f1-micro"
+sql_deletion_protection   = true
 sql_disk_size             = 30
 sql_disk_autoresize       = true
 sql_disk_autoresize_limit = 200
