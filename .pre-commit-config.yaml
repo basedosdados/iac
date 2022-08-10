@@ -15,14 +15,12 @@ repos:
   hooks:
   - id: pretty-format-yaml
     args: [--autofix, --indent, '2']
-# - repo: https://github.com/antonbabenko/pre-commit-terraform
-#   rev: v1.72.1
-#   hooks:
-#   - id: infracost_breakdown
-#     args:
-#     - --args=--path=./terraform
-#     - --args=--terraform-var-file=variables.tf
-#     verbose: true
-#   - id: terraform_fmt
-#   - id: terraform_validate
-#   - id: terraform_tflint
+- repo: https://github.com/antonbabenko/pre-commit-terraform
+  rev: v1.72.1
+  hooks:
+  - id: infracost_breakdown
+    args:
+    - --args=--path=./terraform
+    verbose: true
+  - id: terraform_fmt
+  - id: terraform_validate

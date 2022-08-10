@@ -24,6 +24,11 @@ variable "sql_version" {
   description = "The version of Cloud SQL to use."
 }
 
+variable "sql_deletion_protection" {
+  type        = bool
+  description = "Whether to enable deletion protection for the Cloud SQL instance."
+}
+
 variable "sql_instance_tier" {
   type        = string
   description = "The tier of Cloud SQL to use."

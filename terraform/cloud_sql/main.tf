@@ -3,10 +3,10 @@ resource "random_id" "db_name_suffix" {
 }
 
 resource "google_sql_database_instance" "main" {
-  name                = "${var.project_id}-${var.sql_version}-${random_id.db_name_suffix.hex}"
+  name                = "${var.project_id}-${random_id.db_name_suffix.hex}"
   region              = var.region
   database_version    = var.sql_version
-  deletion_protection = false
+  deletion_protection = var.sql_deletion_protection
 
   settings {
     tier                  = var.sql_instance_tier
@@ -78,4 +78,9 @@ resource "google_sql_user" "prefect" {
   name     = var.sql_prefect_user_name
   instance = google_sql_database_instance.main.name
   password = var.sql_prefect_user_password
+}
+
+resource "google_sql_database" "prefect" {
+  name     = var.sql_prefect_db_name
+  instance = google_sql_database_instance.main.name
 }
