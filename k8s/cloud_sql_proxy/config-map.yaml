@@ -4,6 +4,6 @@ metadata:
   name: cloud-sql-instance
   namespace: cloud-sql-proxy
 data:
-  CLOUD_SQL_INSTANCE_NAME: basedosdados-dev-postgresql-rp
+  CLOUD_SQL_INSTANCE_NAME: basedosdados-dev-438172e0
   CLOUD_SQL_INSTANCE_REGION: us-central1
   CLOUD_SQL_PROJECT_ID: basedosdados-dev
