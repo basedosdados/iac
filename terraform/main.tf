@@ -32,6 +32,7 @@ module "cloudsql" {
   sql_disk_autoresize_limit         = var.sql_disk_autoresize_limit
   sql_backup_enabled                = var.sql_backup_enabled
   sql_backup_start_time             = var.sql_backup_start_time
+  sql_backup_location               = var.sql_backup_location
   sql_db_max_connections            = var.sql_db_max_connections
   sql_ckan_production_user_name     = var.sql_ckan_production_user_name
   sql_ckan_production_user_password = var.sql_ckan_production_user_password

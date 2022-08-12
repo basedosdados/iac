@@ -59,6 +59,11 @@ variable "sql_backup_start_time" {
   description = "The time at which the backup should start."
 }
 
+variable "sql_backup_location" {
+  type        = string
+  description = "The GCP location to use for the Cloud SQL instance backup."
+}
+
 variable "sql_db_max_connections" {
   type        = number
   description = "The maximum number of connections for the Cloud SQL instance."
