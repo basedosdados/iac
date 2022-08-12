@@ -15,6 +15,7 @@ sql_disk_autoresize       = true
 sql_disk_autoresize_limit = 200
 sql_backup_enabled        = true
 sql_backup_start_time     = "00:00"
+sql_backup_location       = "us"
 sql_db_max_connections    = 500
 ############################################################################
 # GKE
@@ -31,6 +32,3 @@ dynamic_pool_node_preemptible = true
 ############################################################################
 gsa_cloudsql_account_id         = "gsa-cloudsql"
 role_iam_workload_identity_user = "roles/iam.workloadIdentityUser"
-############################################################################
-# Sensitive data that are inputed by CI/CD pipeline
-############################################################################

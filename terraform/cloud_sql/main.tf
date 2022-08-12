@@ -17,6 +17,7 @@ resource "google_sql_database_instance" "main" {
     backup_configuration {
       enabled    = var.sql_backup_enabled
       start_time = var.sql_backup_start_time
+      location   = var.sql_backup_location
     }
 
     database_flags {
