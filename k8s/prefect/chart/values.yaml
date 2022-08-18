@@ -55,11 +55,11 @@ hasura:
   env: []
   resources:
     limits:
+      cpu: 750m
+      memory: 2Gi
+    requests:
       cpu: 500m
       memory: 1Gi
-    requests:
-      cpu: 100m
-      memory: 256Mi
   nodeSelector: {}
   tolerations: []
   affinity: {}
