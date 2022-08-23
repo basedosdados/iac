@@ -12,6 +12,19 @@
 #  3. Run `choco install make`
 #  4. Restart all Git Bash/Terminal windows.
 
+.PHONY: create-dev update-dev
+
+create-dev:
+	python3 -m venv .venv; \
+	. .venv/bin/activate; \
+	pip install --upgrade poetry; \
+	poetry install; \
+	pre-commit install;
+
+update-dev:
+	. .venv/bin/activate; \
+	poetry update;
+
 .PHONY: docker-clean docker-down docker-force docker-logs docker-start docker-stop docker-up
 
 docker-clean:
