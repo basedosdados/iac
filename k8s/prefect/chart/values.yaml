@@ -130,7 +130,7 @@ apollo:
       cpu: 500m
       memory: 1Gi
     requests:
-      cpu: 100m
+      cpu: 300m
       memory: 256Mi
   nodeSelector: {}
   tolerations: []
