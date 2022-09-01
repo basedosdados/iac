@@ -1,0 +1,48 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: redis
+  namespace: redis
+  labels:
+    name: redis
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      name: redis
+  template:
+    metadata:
+      labels:
+        name: redis
+    spec:
+      securityContext:
+        runAsUser: 0
+        fsGroup: 0
+      containers:
+      - name: redis
+        image: redis:6
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 6379
+        command:
+        - redis-server
+        - --save
+        - '60'
+        - '1'
+        - --loglevel
+        - warning
+        volumeMounts:
+        - name: redis-data
+          mountPath: /data
+        resources:
+          requests:
+            memory: 100Mi
+            cpu: 50m
+          limits:
+            memory: 512Mi
+            cpu: 200m
+      restartPolicy: Always
+      volumes:
+      - name: redis-data
+        persistentVolumeClaim:
+          claimName: redis-pvc
