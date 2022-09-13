@@ -9,8 +9,8 @@ data:
   DATASOURCES_DEFAULT_USERNAME: passbolt
   DATASOURCES_DEFAULT_DATABASE: passbolt
   EMAIL_DEFAULT_FROM_NAME: Base dos Dados - Passbolt
-  EMAIL_DEFAULT_FROM: no-reply@basedosdados.org
+  EMAIL_DEFAULT_FROM: noreply@basedosdados.org
   EMAIL_TRANSPORT_DEFAULT_HOST: smtp.gmail.com
   EMAIL_TRANSPORT_DEFAULT_PORT: '587'
-  EMAIL_TRANSPORT_DEFAULT_USERNAME: no-reply@basedosdados.org
+  EMAIL_TRANSPORT_DEFAULT_USERNAME: noreply@basedosdados.org
   EMAIL_TRANSPORT_DEFAULT_TLS: 'true'
