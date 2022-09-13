@@ -1,0 +1,88 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: passbolt
+  namespace: passbolt
+  labels:
+    app: passbolt
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: passbolt-pods
+  template:
+    metadata:
+      labels:
+        app: passbolt-pods
+    spec:
+      initContainers:
+      - name: set-gpg-pvc-permissions
+        image: busybox
+        command: [/bin/sh, -c, chmod -R 777 /data]
+        volumeMounts:
+        - mountPath: /data
+          name: gpg-volume
+      - name: set-jwt-pvc-permissions
+        image: busybox
+        command: [/bin/sh, -c, chmod -R 777 /data]
+        volumeMounts:
+        - mountPath: /data
+          name: jwt-volume
+      containers:
+      - name: passbolt-pod
+        image: passbolt/passbolt:latest-ce-non-root
+        imagePullPolicy: Always
+        command:
+        - /usr/bin/wait-for.sh
+        - -t
+        - '0'
+        - cloud-sql-proxy-mysql:3306
+        - --
+        - /docker-entrypoint.sh
+        ports:
+        - containerPort: 8080
+          name: http
+        - containerPort: 4443
+          name: https
+        envFrom:
+        - configMapRef:
+            name: passbolt-config
+        - secretRef:
+            name: passbolt-secrets
+        volumeMounts:
+        - name: gpg-volume
+          mountPath: /etc/passbolt/gpg
+        - name: jwt-volume
+          mountPath: /etc/passbolt/jwt
+        resources:
+          requests:
+            memory: 128Mi
+            cpu: 100m
+          limits:
+            memory: 256Mi
+            cpu: 200m
+        readinessProbe:
+          httpGet:
+            path: /auth/login
+            port: http
+          initialDelaySeconds: 30
+          periodSeconds: 10
+          timeoutSeconds: 5
+          successThreshold: 1
+          failureThreshold: 3
+        livenessProbe:
+          httpGet:
+            path: /auth/login
+            port: http
+          initialDelaySeconds: 30
+          periodSeconds: 10
+          timeoutSeconds: 5
+          successThreshold: 1
+          failureThreshold: 3
+      volumes:
+      - name: gpg-volume
+        persistentVolumeClaim:
+          claimName: gpg-pvc
+      - name: jwt-volume
+        persistentVolumeClaim:
+          claimName: jwt-pvc
