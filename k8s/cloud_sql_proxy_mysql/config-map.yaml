@@ -1,0 +1,9 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: cloud-sql-instance-mysql
+  namespace: cloud-sql-proxy-mysql
+data:
+  CLOUD_SQL_INSTANCE_NAME: basedosdados-dev-83107981
+  CLOUD_SQL_INSTANCE_REGION: us-central1
+  CLOUD_SQL_PROJECT_ID: basedosdados-dev

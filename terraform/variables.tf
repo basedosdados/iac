@@ -160,6 +160,32 @@ variable "sql_prefect_db_name" {
 }
 
 ############################################################################
+# Cloud SQL MySQL
+############################################################################
+variable "sql_version_mysql" {
+  type        = string
+  description = "The version of Cloud SQL MySQL to use."
+}
+
+variable "sql_passbolt_user_name" {
+  type        = string
+  description = "The name of the Passbolt production database user."
+  default     = "passbolt"
+}
+
+variable "sql_passbolt_user_password" {
+  type        = string
+  description = "The password of the Passbolt production database user."
+  sensitive   = true
+}
+
+variable "sql_passbolt_db_name" {
+  type        = string
+  description = "The name of the Passbolt production database."
+  default     = "passbolt"
+}
+
+############################################################################
 # GKE
 ############################################################################
 variable "static_pool_machine_type" {

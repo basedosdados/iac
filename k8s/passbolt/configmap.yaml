@@ -1,0 +1,16 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: passbolt-config
+  namespace: passbolt
+data:
+  APP_FULL_BASE_URL: https://passbolt.basedosdados.org
+  DATASOURCES_DEFAULT_HOST: cloud-sql-proxy-mysql
+  DATASOURCES_DEFAULT_USERNAME: passbolt
+  DATASOURCES_DEFAULT_DATABASE: passbolt
+  EMAIL_DEFAULT_FROM_NAME: Base dos Dados - Passbolt
+  EMAIL_DEFAULT_FROM: noreply@basedosdados.org
+  EMAIL_TRANSPORT_DEFAULT_HOST: smtp.gmail.com
+  EMAIL_TRANSPORT_DEFAULT_PORT: '587'
+  EMAIL_TRANSPORT_DEFAULT_USERNAME: noreply@basedosdados.org
+  EMAIL_TRANSPORT_DEFAULT_TLS: 'true'

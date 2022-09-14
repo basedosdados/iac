@@ -51,6 +51,26 @@ module "cloudsql" {
   sql_prefect_db_name               = var.sql_prefect_db_name
 }
 
+module "cloudsql_mysql" {
+  source                     = "./cloud_sql_mysql"
+  region                     = var.region
+  zone                       = var.zone
+  project_id                 = var.project_id
+  sql_version                = var.sql_version_mysql
+  sql_instance_tier          = var.sql_instance_tier
+  sql_deletion_protection    = var.sql_deletion_protection
+  sql_disk_size              = var.sql_disk_size
+  sql_disk_autoresize        = var.sql_disk_autoresize
+  sql_disk_autoresize_limit  = var.sql_disk_autoresize_limit
+  sql_backup_enabled         = var.sql_backup_enabled
+  sql_backup_start_time      = var.sql_backup_start_time
+  sql_backup_location        = var.sql_backup_location
+  sql_db_max_connections     = var.sql_db_max_connections
+  sql_passbolt_user_name     = var.sql_passbolt_user_name
+  sql_passbolt_user_password = var.sql_passbolt_user_password
+  sql_passbolt_db_name       = var.sql_passbolt_db_name
+}
+
 module "gke" {
   source                        = "./gke"
   project_id                    = var.project_id
