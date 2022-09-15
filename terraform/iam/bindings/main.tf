@@ -18,5 +18,6 @@ resource "google_service_account_iam_binding" "cloudsql" {
   members = [
     "serviceAccount:basedosdados-dev.svc.id.goog[cloud-sql-proxy/cloud-sql-access]",
     "serviceAccount:basedosdados-dev.svc.id.goog[cloud-sql-proxy/cloud-sql-proxy]",
+    "serviceAccount:basedosdados-dev.svc.id.goog[cloud-sql-proxy-mysql/cloud-sql-access]",
   ]
 }
