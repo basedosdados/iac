@@ -24,7 +24,7 @@ sql_version_mysql = "MYSQL_5_7"
 ############################################################################
 # GKE
 ############################################################################
-static_pool_machine_type      = "n1-standard-4"
+static_pool_machine_type      = "n1-standard-2"
 static_pool_node_count        = 2
 dynamic_pool_machine_type     = "e2-medium"
 dynamic_pool_node_count       = 0
