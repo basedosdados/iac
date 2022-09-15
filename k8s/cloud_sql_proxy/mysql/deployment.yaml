@@ -1,0 +1,40 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: cloud-sql-proxy-mysql
+  name: cloud-sql-proxy-mysql
+  namespace: cloud-sql-proxy-mysql
+spec:
+  selector:
+    matchLabels:
+      app: cloud-sql-proxy-mysql
+  strategy: {}
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: cloud-sql-proxy-mysql
+    spec:
+      serviceAccountName: cloud-sql-access
+      containers:
+      - name: cloud-sql-proxy-mysql
+        image: gcr.io/cloudsql-docker/gce-proxy:1.23.0
+        ports:
+        - containerPort: 3306
+          protocol: TCP
+        envFrom:
+        - configMapRef:
+            name: cloud-sql-instance-mysql
+        command:
+        - /cloud_sql_proxy
+        - -instances=$(CLOUD_SQL_PROJECT_ID):$(CLOUD_SQL_INSTANCE_REGION):$(CLOUD_SQL_INSTANCE_NAME)=tcp:0.0.0.0:3306
+        securityContext:
+          runAsNonRoot: true
+        resources:
+          requests:
+            memory: 64Mi
+            cpu: 100m
+          limits:
+            memory: 128Mi
+            cpu: 200m
