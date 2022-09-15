@@ -1,7 +1,7 @@
 from functools import partial
 import subprocess
 from typing import Callable
-
+import base64
 import typer
 
 app = typer.Typer()
@@ -32,6 +32,38 @@ def echo_and_run(command: str, stdout_callback: Callable = partial(print, end=''
     if return_code:
         raise subprocess.CalledProcessError(return_code, command)
     return return_code
+
+
+@app.command()
+def decode_base64(data: str):
+    """
+    Decode data from base64
+    """
+    pass
+
+
+@app.command()
+def encode_base64(data: str):
+    """
+    Encode data to base64
+    """
+    pass
+
+
+@app.command()
+def double_decode_base64(data):
+    """
+    Decode data from base64 twice
+    """
+    return decode_base64(decode_base64(data)).decode('utf-8')
+
+
+@app.command()
+def double_encode_base64(data):
+    """
+    Encode data to base64 twice
+    """
+    return encode_base64(encode_base64(data).decode())
 
 
 @app.command()

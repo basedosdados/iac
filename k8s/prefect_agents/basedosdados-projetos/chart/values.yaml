@@ -1,4 +1,4 @@
-# helm install prefect-agent prefeitura-rio/prefect-agent -n prefect-agent-questions -f values.yaml
+# helm install prefect-agent prefeitura-rio/prefect-agent -n prefect-agent-projects -f values.yaml
 
 agent:
   apollo_url: http://prefect-apollo.prefect.svc.cluster.local:4200/
@@ -17,7 +17,7 @@ agent:
   jobTemplateFilePath: https://storage.googleapis.com/basedosdados-dev/prefect_job_template/job_template.yaml
   name: prefect-agent
   prefectLabels:
-  - perguntas
+  - basedosdados-projetos
   replicas: 1
   resources:
     limits:

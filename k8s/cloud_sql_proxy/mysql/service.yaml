@@ -1,0 +1,15 @@
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: cloud-sql-proxy-mysql
+  name: cloud-sql-proxy-mysql
+  namespace: cloud-sql-proxy-mysql
+spec:
+  ports:
+  - name: cloud-sql-proxy-mysql
+    port: 3306
+    protocol: TCP
+    targetPort: 3306
+  selector:
+    app: cloud-sql-proxy-mysql
