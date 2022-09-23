@@ -63,7 +63,7 @@ def double_encode_base64(data):
     """
     Encode data to base64 twice
     """
-    echo_and_run(f'echo "{data}" | base64 | base64')
+    echo_and_run(f'echo "{data}" | base64 -w 0 | base64 -w 0')
 
 
 @app.command()
