@@ -1,11 +1,22 @@
-# helm upgrade --install prefect-agent prefeitura-rio/prefect-agent -n prefect-agent-questions -f values.yaml
+# helm upgrade --install prefect-agent prefeitura-rio/prefect-agent -n prefect-agent-basedosdados-perguntas -f values.yaml
 
 agent:
-  apollo_url: http://prefect-apollo.prefect.svc.cluster.local:4200/
-  env: []
+  name: prefect-agent
+  type: kubernetes
+  vertexRegion: ''
+  vertexServiceAccount: ''
+  prefectLabels:
+  - basedosdados-perguntas
+  replicas: 1
   image:
     name: prefecthq/prefect
     tag: 0.15.9
+  serviceAccountName: prefect-agent
+  jobTemplateFilePath: https://storage.googleapis.com/basedosdados-dev/prefect_job_template/job_template.yaml
+  apollo_url: http://prefect-apollo.prefect.svc.cluster.local:4200/
+  prefect_backend_server: true
+  auth_secret_name: ''
+  gcp_sa_secret_name: ''
   job:
     resources:
       limits:
@@ -14,13 +25,8 @@ agent:
       requests:
         cpu: ''
         memory: ''
-  jobTemplateFilePath: https://storage.googleapis.com/basedosdados-dev/prefect_job_template/job_template.yaml
-  name: prefect-agent
-  prefectLabels:
-  - basedosdados-perguntas
-  replicas: 1
+  env: []
   resources:
     limits:
       cpu: 100m
       memory: 128Mi
-  serviceAccountName: prefect-agent

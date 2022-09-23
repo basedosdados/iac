@@ -54,9 +54,6 @@ hasura:
   securityContext: {}
   env: []
   resources:
-    limits:
-      cpu: 750m
-      memory: 2Gi
     requests:
       cpu: 500m
       memory: 1Gi
@@ -83,9 +80,6 @@ graphql:
   securityContext: {}
   env: {}
   resources:
-    limits:
-      cpu: 500m
-      memory: 1Gi
     requests:
       cpu: 100m
       memory: 256Mi
@@ -126,9 +120,6 @@ apollo:
   securityContext: {}
   env: {}
   resources:
-    limits:
-      cpu: 500m
-      memory: 1Gi
     requests:
       cpu: 300m
       memory: 256Mi

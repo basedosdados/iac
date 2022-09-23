@@ -1,0 +1,80 @@
+# helm upgrade --install prefect-agent prefeitura-rio/prefect-agent -n prefect-agent-basedosdados-dev-gcp-vertex --create-namespace -f values.yaml
+
+# agent configures a Prefect Kubernetes agent which will
+# schedule flows as jobs in the cluster
+agent:
+  # The name for the deployment
+  name: prefect-agent
+
+  # The type of agent to run. Currently supported: `kubernetes` or `vertex`
+  # https://docs-v1.prefect.io/orchestration/agents/overview.html#agent-types
+  type: vertex
+
+  # Required if type is "vertex".
+  # https://docs-v1.prefect.io/orchestration/agents/vertex.html#region
+  # https://cloud.google.com/compute/docs/regions-zones/viewing-regions-zones#gcloud
+  vertexRegion: southamerica-east1
+
+  # The service account to use for the "vertex" agent.
+  # https://docs-v1.prefect.io/orchestration/agents/vertex.html#service-account
+  vertexServiceAccount: prefect@basedosdados-dev.iam.gserviceaccount.com
+
+  # prefectLabels defines what scheduling labels (not K8s labels) should
+  # be associated with the agent
+  prefectLabels:
+  - basedosdados-dev-gcp-vertex
+
+  # K8s service account name (will be created)
+  serviceAccountName: prefect-agent
+
+  # The number of replicas to deploy (1 is enough for most cases)
+  replicas: 1
+
+  # The image to use for the agent. Note that changing this may require
+  # setting up VPN connection on the image.
+  image:
+    # name: ghcr.io/basedosdados/prefect-flows
+    # tag: latest
+    name: prefecthq/prefect
+    tag: 0.15.9
+
+  # jobTemplateFilePath defines which template to use for the agent's jobs. Defaults
+  # to an empty string, which will use the default template.
+  # reference: https://docs.prefect.io/orchestration/agents/kubernetes.html#custom-job-template
+  jobTemplateFilePath: ''
+
+  # The Apollo GraphQL URL to use for the agent. Defaults to the
+  # Apollo service (must have either Apollo or Istion setup)
+  apollo_url: https://prefect.basedosdados.org/api
+
+  # If using Prefect Server as backend, set this to true
+  prefect_backend_server: true
+
+  # For Prefect Cloud, one must provide the auth.toml file (that's usually located at
+  # $HOME/.prefect/auth.toml) in a secret for the agent to mount. Provide the name of
+  # the secret here.
+  auth_secret_name: auth-toml
+
+  # For vertex, one must provide the service account key file in a secret for the agent
+  gcp_sa_secret_name: gcp-sa
+
+  # job configures values associated with jobs the agent launches
+  job:
+    # resources defines the computational resources for flow jobs
+    resources:
+      limits:
+        memory: ''
+        cpu: ''
+      requests:
+        memory: ''
+        cpu: ''
+
+  # General purpose environment variables to set on the agent pods
+  env: []
+
+  # resources defines the computational resources for the Prefect
+  # agent itself
+  resources:
+    limits:
+      cpu: 100m
+      memory: 128Mi

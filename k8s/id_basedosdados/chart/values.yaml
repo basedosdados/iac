@@ -30,4 +30,4 @@ ingress:
     - id.basedosdados.org
     secretName: id-basedosdados-tls
   # Django admin URLs prefix.
-  admin_prefix: /admin/
+  admin_prefix: /root/

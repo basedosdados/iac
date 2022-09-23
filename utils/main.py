@@ -39,7 +39,7 @@ def decode_base64(data: str):
     """
     Decode data from base64
     """
-    pass
+    echo_and_run(f'echo "{data}" | base64 -d')
 
 
 @app.command()
@@ -47,7 +47,7 @@ def encode_base64(data: str):
     """
     Encode data to base64
     """
-    pass
+    echo_and_run(f'echo "{data}" | base64 -w 0')
 
 
 @app.command()
@@ -55,7 +55,7 @@ def double_decode_base64(data):
     """
     Decode data from base64 twice
     """
-    return decode_base64(decode_base64(data)).decode('utf-8')
+    echo_and_run(f'echo "{data}" | base64 -d | base64 -d')
 
 
 @app.command()
@@ -63,7 +63,7 @@ def double_encode_base64(data):
     """
     Encode data to base64 twice
     """
-    return encode_base64(encode_base64(data).decode())
+    echo_and_run(f'echo "{data}" | base64 | base64')
 
 
 @app.command()
