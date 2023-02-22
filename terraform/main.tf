@@ -20,35 +20,29 @@ provider "google" {
 }
 
 module "cloudsql" {
-  source                            = "./cloud_sql"
-  region                            = var.region
-  zone                              = var.zone
-  project_id                        = var.project_id
-  sql_version                       = var.sql_version
-  sql_instance_tier                 = var.sql_instance_tier
-  sql_deletion_protection           = var.sql_deletion_protection
-  sql_disk_size                     = var.sql_disk_size
-  sql_disk_autoresize               = var.sql_disk_autoresize
-  sql_disk_autoresize_limit         = var.sql_disk_autoresize_limit
-  sql_backup_enabled                = var.sql_backup_enabled
-  sql_backup_start_time             = var.sql_backup_start_time
-  sql_backup_location               = var.sql_backup_location
-  sql_db_max_connections            = var.sql_db_max_connections
-  sql_ckan_production_user_name     = var.sql_ckan_production_user_name
-  sql_ckan_production_user_password = var.sql_ckan_production_user_password
-  sql_ckan_production_db_name       = var.sql_ckan_production_db_name
-  sql_ckan_staging_user_name        = var.sql_ckan_staging_user_name
-  sql_ckan_staging_user_password    = var.sql_ckan_staging_user_password
-  sql_ckan_staging_db_name          = var.sql_ckan_staging_db_name
-  sql_id_server_user_name           = var.sql_id_server_user_name
-  sql_id_server_user_password       = var.sql_id_server_user_password
-  sql_id_server_db_name             = var.sql_id_server_db_name
-  sql_metabase_user_name            = var.sql_metabase_user_name
-  sql_metabase_user_password        = var.sql_metabase_user_password
-  sql_metabase_db_name              = var.sql_metabase_db_name
-  sql_prefect_user_name             = var.sql_prefect_user_name
-  sql_prefect_user_password         = var.sql_prefect_user_password
-  sql_prefect_db_name               = var.sql_prefect_db_name
+  source                      = "./cloud_sql"
+  region                      = var.region
+  zone                        = var.zone
+  project_id                  = var.project_id
+  sql_version                 = var.sql_version
+  sql_instance_tier           = var.sql_instance_tier
+  sql_deletion_protection     = var.sql_deletion_protection
+  sql_disk_size               = var.sql_disk_size
+  sql_disk_autoresize         = var.sql_disk_autoresize
+  sql_disk_autoresize_limit   = var.sql_disk_autoresize_limit
+  sql_backup_enabled          = var.sql_backup_enabled
+  sql_backup_start_time       = var.sql_backup_start_time
+  sql_backup_location         = var.sql_backup_location
+  sql_db_max_connections      = var.sql_db_max_connections
+  sql_id_server_user_name     = var.sql_id_server_user_name
+  sql_id_server_user_password = var.sql_id_server_user_password
+  sql_id_server_db_name       = var.sql_id_server_db_name
+  sql_metabase_user_name      = var.sql_metabase_user_name
+  sql_metabase_user_password  = var.sql_metabase_user_password
+  sql_metabase_db_name        = var.sql_metabase_db_name
+  sql_prefect_user_name       = var.sql_prefect_user_name
+  sql_prefect_user_password   = var.sql_prefect_user_password
+  sql_prefect_db_name         = var.sql_prefect_db_name
 }
 
 module "cloudsql_mysql" {

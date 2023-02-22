@@ -69,40 +69,16 @@ variable "sql_db_max_connections" {
   description = "The maximum number of connections for the Cloud SQL instance."
 }
 
-variable "sql_ckan_production_user_name" {
+variable "sql_api_staging_user_name" {
   type        = string
-  description = "The name of the CKAN production database user."
-  default     = "ckan_production"
+  description = "The name of the API staging database user."
+  default     = "api_staging"
 }
 
-variable "sql_ckan_production_user_password" {
+variable "sql_api_staging_db_name" {
   type        = string
-  description = "The password of the CKAN production database user."
-  sensitive   = true
-}
-
-variable "sql_ckan_production_db_name" {
-  type        = string
-  description = "The name of the CKAN production database."
-  default     = "ckan_production"
-}
-
-variable "sql_ckan_staging_user_name" {
-  type        = string
-  description = "The name of the CKAN staging database user."
-  default     = "ckan_staging"
-}
-
-variable "sql_ckan_staging_user_password" {
-  type        = string
-  description = "The password of the CKAN staging user."
-  sensitive   = true
-}
-
-variable "sql_ckan_staging_db_name" {
-  type        = string
-  description = "The name of the CKAN staging database."
-  default     = "ckan_staging"
+  description = "The name of the API staging database."
+  default     = "api_staging"
 }
 
 variable "sql_id_server_user_name" {
