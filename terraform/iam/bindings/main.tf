@@ -1,9 +1,9 @@
 # Add IAM policy binding for Cloud SQL SA
-resource "google_project_iam_member" "cloudsql" {
-  project = var.project_id
-  role    = "roles/cloudsql.client"
-  member  = "serviceAccount:${var.gsa-cloudsql.email}"
-}
+# resource "google_project_iam_member" "cloudsql" {
+#   project = var.project_id
+#   role    = "roles/cloudsql.client"
+#   member  = "serviceAccount:${var.gsa-cloudsql.email}"
+# }
 
 # Allow the Kubernetes service account to impersonate the Google
 # service account by creating an IAM policy binding between the

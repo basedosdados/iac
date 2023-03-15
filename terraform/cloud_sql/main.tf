@@ -1,7 +1,38 @@
+# ...........................................................................
+# Create Random Data
+# https://registry.terraform.io/providers/hashicorp/random/latest/docs/resources/id
+# ...........................................................................
 resource "random_id" "db_name_suffix" {
   byte_length = 4
 }
 
+resource "random_password" "api_staging_db_password" {
+  length           = 22
+  special          = true
+  override_special = "!#$%&*()-_=+[]{}<>:?"
+}
+
+# ...........................................................................
+# Write data to Secret Manager
+# https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/secret_manager_secret
+# ...........................................................................
+resource "google_secret_manager_secret" "api_staging_db_password" {
+  secret_id = "api-staging-db-password"
+
+  replication {
+    automatic = true
+  }
+}
+
+resource "google_secret_manager_secret_version" "api_staging_db_password" {
+  secret      = google_secret_manager_secret.api_staging_db_password.id
+  secret_data = random_password.api_staging_db_password.result
+}
+
+# ...........................................................................
+# Create Cloud SQL
+# https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/sql_database_instance
+# ...........................................................................
 resource "google_sql_database_instance" "main" {
   name                = "${var.project_id}-${random_id.db_name_suffix.hex}"
   region              = var.region
@@ -31,26 +62,20 @@ resource "google_sql_database_instance" "main" {
   }
 }
 
-resource "google_sql_user" "ckan_production" {
-  name     = var.sql_ckan_production_user_name
+# ...........................................................................
+# Create Cloud SQL Databases and Users
+# https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/sql_database
+# https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/sql_user
+# ...........................................................................
+resource "google_sql_database" "api_staging" {
+  name     = var.sql_api_staging_db_name
   instance = google_sql_database_instance.main.name
-  password = var.sql_ckan_production_user_password
 }
 
-resource "google_sql_database" "ckan_production" {
-  name     = var.sql_ckan_production_db_name
+resource "google_sql_user" "api_staging" {
+  name     = var.sql_api_staging_user_name
   instance = google_sql_database_instance.main.name
-}
-
-resource "google_sql_user" "ckan_staging" {
-  name     = var.sql_ckan_staging_user_name
-  instance = google_sql_database_instance.main.name
-  password = var.sql_ckan_staging_user_password
-}
-
-resource "google_sql_database" "ckan_staging" {
-  name     = var.sql_ckan_staging_db_name
-  instance = google_sql_database_instance.main.name
+  password = random_password.api_staging_db_password.result
 }
 
 resource "google_sql_database" "id_server" {
@@ -61,7 +86,7 @@ resource "google_sql_database" "id_server" {
 resource "google_sql_user" "id_server" {
   name     = var.sql_id_server_user_name
   instance = google_sql_database_instance.main.name
-  password = var.sql_ckan_production_user_password
+  password = var.sql_id_server_user_password
 }
 
 resource "google_sql_user" "metabase" {

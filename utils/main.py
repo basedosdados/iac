@@ -3,6 +3,8 @@ import subprocess
 from typing import Callable
 import base64
 import typer
+import random
+import string
 
 app = typer.Typer()
 
@@ -39,7 +41,7 @@ def decode_base64(data: str):
     """
     Decode data from base64
     """
-    echo_and_run(f'echo "{data}" | base64 -d')
+    return typer.echo(base64.b64decode(data.encode()).decode())
 
 
 @app.command()
@@ -47,7 +49,7 @@ def encode_base64(data: str):
     """
     Encode data to base64
     """
-    echo_and_run(f'echo "{data}" | base64 -w 0')
+    return typer.echo(base64.b64encode(data.encode()).decode())
 
 
 @app.command()
@@ -55,7 +57,7 @@ def double_decode_base64(data):
     """
     Decode data from base64 twice
     """
-    echo_and_run(f'echo "{data}" | base64 -d | base64 -d')
+    return typer.echo(base64.b64decode(base64.b64decode(data.encode())).decode())
 
 
 @app.command()
@@ -63,7 +65,16 @@ def double_encode_base64(data):
     """
     Encode data to base64 twice
     """
-    echo_and_run(f'echo "{data}" | base64 -w 0 | base64 -w 0')
+    return typer.echo(base64.b64encode(base64.b64encode(data.encode())).decode())
+
+
+@app.command()
+def get_random_value(length: int):
+    """
+    Get a random value of the given length
+    """
+    characters = string.ascii_letters + string.digits + string.punctuation
+    return typer.echo("".join(random.choice(characters) for _ in range(length)))
 
 
 @app.command()
