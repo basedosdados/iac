@@ -150,6 +150,26 @@ variable "sql_passbolt_db_name" {
 }
 
 ############################################################################
+# Cloud Storage
+############################################################################
+variable "bucket_name" {
+  type        = string
+  description = "The name of the bucket."
+}
+
+variable "bucket_uniform_bucket_level_access" {
+  type        = bool
+  description = "Whether to enable Uniform Bucket-Level Access for the bucket."
+  default     = true
+}
+
+variable "bucket_versioning" {
+  type        = bool
+  description = "Whether to enable versioning for the bucket."
+  default     = true
+}
+
+############################################################################
 # GKE
 ############################################################################
 variable "static_pool_machine_type" {

@@ -65,6 +65,11 @@ module "cloudsql_mysql" {
   sql_passbolt_db_name       = var.sql_passbolt_db_name
 }
 
+module "cloud_storage" {
+  source      = "./cloud_storage"
+  bucket_name = var.bucket_name
+}
+
 module "gke" {
   source                        = "./gke"
   project_id                    = var.project_id
