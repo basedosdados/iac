@@ -18,7 +18,7 @@ loki:
     uid: ''
   persistence:
     enabled: true
-    size: 20Gi
+    size: 100Gi
 
 promtail:
   enabled: true
