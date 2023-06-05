@@ -9,7 +9,7 @@ resource "google_sql_database_instance" "main" {
   deletion_protection = var.sql_deletion_protection
 
   settings {
-    tier                  = var.sql_instance_tier
+    tier                  = var.sql_mysql_instance_tier
     disk_size             = var.sql_disk_size
     disk_autoresize       = var.sql_disk_autoresize
     disk_autoresize_limit = var.sql_disk_autoresize_limit

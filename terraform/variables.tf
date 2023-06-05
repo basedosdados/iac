@@ -34,6 +34,11 @@ variable "sql_instance_tier" {
   description = "The tier of Cloud SQL to use."
 }
 
+variable "sql_mysql_instance_tier" {
+  type        = string
+  description = "The tier of Cloud SQL to use for MySQL."
+}
+
 variable "sql_disk_size" {
   type        = number
   description = "The size of the disk for the Cloud SQL instance."

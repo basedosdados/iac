@@ -29,7 +29,7 @@ variable "sql_deletion_protection" {
   description = "Whether to enable deletion protection for the Cloud SQL instance."
 }
 
-variable "sql_instance_tier" {
+variable "sql_mysql_instance_tier" {
   type        = string
   description = "The tier of Cloud SQL to use."
 }
