@@ -6,7 +6,19 @@ resource "random_id" "db_name_suffix" {
   byte_length = 4
 }
 
+resource "random_password" "api_development_db_password" {
+  length           = 22
+  special          = true
+  override_special = "!#$%&*()-_=+[]{}<>:?"
+}
+
 resource "random_password" "api_staging_db_password" {
+  length           = 22
+  special          = true
+  override_special = "!#$%&*()-_=+[]{}<>:?"
+}
+
+resource "random_password" "api_db_password" {
   length           = 22
   special          = true
   override_special = "!#$%&*()-_=+[]{}<>:?"
@@ -16,6 +28,19 @@ resource "random_password" "api_staging_db_password" {
 # Write data to Secret Manager
 # https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/secret_manager_secret
 # ...........................................................................
+resource "google_secret_manager_secret" "api_development_db_password" {
+  secret_id = "api-development-db-password"
+
+  replication {
+    automatic = true
+  }
+}
+
+resource "google_secret_manager_secret_version" "api_development_db_password" {
+  secret      = google_secret_manager_secret.api_development_db_password.id
+  secret_data = random_password.api_development_db_password.result
+}
+
 resource "google_secret_manager_secret" "api_staging_db_password" {
   secret_id = "api-staging-db-password"
 
@@ -27,6 +52,19 @@ resource "google_secret_manager_secret" "api_staging_db_password" {
 resource "google_secret_manager_secret_version" "api_staging_db_password" {
   secret      = google_secret_manager_secret.api_staging_db_password.id
   secret_data = random_password.api_staging_db_password.result
+}
+
+resource "google_secret_manager_secret" "api_db_password" {
+  secret_id = "api-db-password"
+
+  replication {
+    automatic = true
+  }
+}
+
+resource "google_secret_manager_secret_version" "api_db_password" {
+  secret      = google_secret_manager_secret.api_db_password.id
+  secret_data = random_password.api_db_password.result
 }
 
 # ...........................................................................
@@ -67,6 +105,17 @@ resource "google_sql_database_instance" "main" {
 # https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/sql_database
 # https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/sql_user
 # ...........................................................................
+resource "google_sql_database" "api" {
+  name     = "api"
+  instance = google_sql_database_instance.main.name
+}
+
+resource "google_sql_user" "api_prod" {
+  name     = "api"
+  instance = google_sql_database_instance.main.name
+  password = random_password.api_db_password.result
+}
+
 resource "google_sql_database" "api_staging" {
   name     = var.sql_api_staging_db_name
   instance = google_sql_database_instance.main.name
@@ -76,6 +125,17 @@ resource "google_sql_user" "api_staging" {
   name     = var.sql_api_staging_user_name
   instance = google_sql_database_instance.main.name
   password = random_password.api_staging_db_password.result
+}
+
+resource "google_sql_database" "api_development" {
+  name     = var.sql_api_development_db_name
+  instance = google_sql_database_instance.main.name
+}
+
+resource "google_sql_user" "api_development" {
+  name     = var.sql_api_development_user_name
+  instance = google_sql_database_instance.main.name
+  password = random_password.api_development_db_password.result
 }
 
 resource "google_sql_database" "id_server" {
