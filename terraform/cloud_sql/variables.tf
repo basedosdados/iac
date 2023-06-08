@@ -81,6 +81,18 @@ variable "sql_api_staging_db_name" {
   default     = "api_staging"
 }
 
+variable "sql_api_development_user_name" {
+  type        = string
+  description = "The name of the API development database user."
+  default     = "api_development"
+}
+
+variable "sql_api_development_db_name" {
+  type        = string
+  description = "The name of the API development database."
+  default     = "api_development"
+}
+
 variable "sql_id_server_user_name" {
   type        = string
   description = "The name of the ID server database user."
