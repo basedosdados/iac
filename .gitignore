@@ -1,6 +1,7 @@
 # Environments
 .env
 .venv
+.infracost
 env/
 venv/
 ENV/

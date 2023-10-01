@@ -1,4 +1,4 @@
-# helm upgrade --install loki-stack -n observability --create-namespace grafana/loki-stack -f values.yaml
+# helm upgrade --install loki-stack -n observability grafana/loki-stack -f values.yaml
 loki:
   enabled: true
   isDefault: true
