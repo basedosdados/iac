@@ -9,7 +9,7 @@ podAnnotations: {}
 podLabels: {}
 image:
   repository: metabase/metabase
-  tag: v0.47.2
+  tag: v0.47.6
   command: []
   pullPolicy: IfNotPresent
   pullSecrets: []
@@ -189,11 +189,11 @@ resources:
   # resources, such as Minikube. If you do want to specify resources, uncomment the following
   # lines, adjust them as necessary, and remove the curly braces after 'resources:'.
   requests:
-    cpu: 250m
-    memory: 1Gi
+    cpu: "1"
+    memory: 2Gi
   limits:
-    cpu: 500m
-    memory: 1.5Gi
+    cpu: "1"
+    memory: 2Gi
 
 ## Node labels for pod assignment
 ## ref: https://kubernetes.io/docs/user-guide/node-selection/
