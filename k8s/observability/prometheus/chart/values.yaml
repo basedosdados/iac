@@ -1016,17 +1016,16 @@ grafana:
     #   hosts:
     #   - grafana.example.com
 
-  # # To make Grafana persistent (Using Statefulset)
-  # #
-  # persistence:
-  #   enabled: true
-  #   type: sts
-  #   storageClassName: "storageClassName"
-  #   accessModes:
-  #     - ReadWriteOnce
-  #   size: 20Gi
-  #   finalizers:
-  #     - kubernetes.io/pvc-protection
+  # To make Grafana persistent (Using Statefulset)
+  #
+  persistence:
+    enabled: true
+    type: pvc
+    accessModes:
+      - ReadWriteOnce
+    size: 20Gi
+    finalizers:
+      - kubernetes.io/pvc-protection
 
   serviceAccount:
     create: true
