@@ -1031,6 +1031,14 @@ grafana:
     create: true
     autoMount: true
 
+  grafana.ini:
+    auth.anonymous:
+      enabled: true
+      org_name: Main Org.
+      org_role: Editor
+    
+    disable_login_form: true
+
   sidecar:
     dashboards:
       enabled: true
