@@ -1,6 +1,28 @@
 apiVersion: v1
 kind: ConfigMap
 metadata:
+  name: grafana-datasources
+  namespace: observability
+  labels:
+    grafana_datasource: "1"
+data:
+  loki.yaml: |-
+    apiVersion: 1
+    datasources:
+    - name: Loki
+      type: loki
+      url: "http://loki:3100"
+      uid: "lokiuid"
+      access: proxy
+      editable: false
+      basicAuth: false
+      jsonData:
+        timeout: 60
+        maxLines: 1000
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
   name: grafana-dashboard-backend
   namespace: observability
   labels:
@@ -40,7 +62,7 @@ data:
         {
           "datasource": {
             "type": "loki",
-            "uid": "salmon"
+            "uid": "lokiuid"
           },
           "fieldConfig": {
             "defaults": {
@@ -117,7 +139,7 @@ data:
             {
               "datasource": {
                 "type": "loki",
-                "uid": "salmon"
+                "uid": "lokiuid"
               },
               "editorMode": "code",
               "expr": "sum(count_over_time({app=\"$environment\"} [$__interval]))",
@@ -131,7 +153,7 @@ data:
         {
           "datasource": {
             "type": "loki",
-            "uid": "salmon"
+            "uid": "lokiuid"
           },
           "gridPos": {
             "h": 17,
@@ -154,7 +176,7 @@ data:
             {
               "datasource": {
                 "type": "loki",
-                "uid": "salmon"
+                "uid": "lokiuid"
               },
               "editorMode": "code",
               "expr": "{app=\"$environment\"} != `huey` != `elasticsearch` | json | __error__=``",
@@ -168,7 +190,7 @@ data:
         {
           "datasource": {
             "type": "loki",
-            "uid": "salmon"
+            "uid": "lokiuid"
           },
           "gridPos": {
             "h": 8,
@@ -191,7 +213,7 @@ data:
             {
               "datasource": {
                 "type": "loki",
-                "uid": "salmon"
+                "uid": "lokiuid"
               },
               "editorMode": "code",
               "expr": "{app=\"api-prod\"} |= \"huey\"",
@@ -205,7 +227,7 @@ data:
         {
           "datasource": {
             "type": "loki",
-            "uid": "salmon"
+            "uid": "lokiuid"
           },
           "gridPos": {
             "h": 5,
@@ -228,7 +250,7 @@ data:
             {
               "datasource": {
                 "type": "loki",
-                "uid": "salmon"
+                "uid": "lokiuid"
               },
               "editorMode": "code",
               "expr": "{app=\"$environment\"} |= \"elasticsearch\"",
@@ -285,7 +307,7 @@ data:
       },
       "timepicker": {},
       "timezone": "",
-      "title": "Backend",
+      "title": "Base dos Dados / Backend",
       "uid": "Af1tq9SSk",
       "version": 3,
       "weekStart": ""
@@ -333,7 +355,7 @@ data:
         {
           "datasource": {
             "type": "loki",
-            "uid": "salmon"
+            "uid": "lokiuid"
           },
           "gridPos": {
             "h": 23,
@@ -356,7 +378,7 @@ data:
             {
               "datasource": {
                 "type": "loki",
-                "uid": "salmon"
+                "uid": "lokiuid"
               },
               "editorMode": "code",
               "expr": "{app=\"metabase\"} != `/api/health`",
@@ -370,7 +392,7 @@ data:
         {
           "datasource": {
             "type": "loki",
-            "uid": "salmon"
+            "uid": "lokiuid"
           },
           "gridPos": {
             "h": 23,
@@ -393,7 +415,7 @@ data:
             {
               "datasource": {
                 "type": "loki",
-                "uid": "salmon"
+                "uid": "lokiuid"
               },
               "editorMode": "builder",
               "expr": "{app=\"metabase\"} |= `/api/health`",
@@ -417,7 +439,7 @@ data:
       },
       "timepicker": {},
       "timezone": "",
-      "title": "Metabase",
+      "title": "Base dos Dados / Metabase",
       "uid": "tnBIzCISz",
       "version": 4,
       "weekStart": ""
@@ -549,7 +571,7 @@ data:
       },
       "timepicker": {},
       "timezone": "",
-      "title": "Metadados de Tabelas",
+      "title": "Base dos Dados / Metadados de Tabelas",
       "uid": "_Lq-p0DIk",
       "version": 2,
       "weekStart": ""
