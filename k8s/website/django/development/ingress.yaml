@@ -1,0 +1,29 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: api-development-ingress-tmp
+  namespace: website
+  labels:
+    app.kubernetes.io/component: basedosdados-api
+    app.kubernetes.io/name: api-development
+  annotations:
+    cert-manager.io/issuer: letsencrypt-production
+    kubernetes.io/ingress.class: nginx
+    nginx.ingress.kubernetes.io/rewrite-target: /
+    nginx.ingress.kubernetes.io/ssl-redirect: "true"
+spec:
+  rules:
+    - host: development.api.basedosdados.org
+      http:
+        paths:
+        - path: /
+          pathType: Prefix
+          backend:
+            service:
+              name: api-development-service
+              port:
+                number: 80
+  tls:
+    - hosts:
+      - development.api.basedosdados.org
+      secretName: api-development-basedosdados-org-tmp-tls

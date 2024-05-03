@@ -1,0 +1,29 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: api-staging-ingress-tmp
+  namespace: website
+  labels:
+    app.kubernetes.io/component: basedosdados-api
+    app.kubernetes.io/name: api-staging
+  annotations:
+    cert-manager.io/issuer: letsencrypt-production
+    kubernetes.io/ingress.class: nginx
+    nginx.ingress.kubernetes.io/rewrite-target: /
+    nginx.ingress.kubernetes.io/ssl-redirect: "true"
+spec:
+  rules:
+    - host: staging.api.basedosdados.org
+      http:
+        paths:
+        - path: /
+          pathType: Prefix
+          backend:
+            service:
+              name: api-staging-service
+              port:
+                number: 80
+  tls:
+    - hosts:
+      - staging.api.basedosdados.org
+      secretName: api-staging-basedosdados-org-tmp-tls
