@@ -217,7 +217,7 @@ data:
                 "uid": "lokiuid"
               },
               "editorMode": "code",
-              "expr": "{app=\"api-prod\"} |= \"huey\" | json",
+              "expr": "{app=\"api-prod\"} |= \"$huey\"",
               "queryType": "range",
               "refId": "A"
             }
@@ -301,6 +301,13 @@ data:
           },
           {
             "hide": 2,
+            "name": "huey",
+            "query": "huey",
+            "skipUrlSync": false,
+            "type": "constant"
+          },
+          {
+            "hide": 2,
             "name": "elasticsearch",
             "query": "elasticsearch",
             "skipUrlSync": false,
@@ -316,7 +323,7 @@ data:
       "timezone": "",
       "title": "Base dos Dados / Backend",
       "uid": "Af1tq9SSk",
-      "version": 1,
+      "version": 2,
       "weekStart": ""
     }
 ---
