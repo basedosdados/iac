@@ -55,7 +55,6 @@ data:
       "editable": true,
       "fiscalYearStartMonth": 0,
       "graphTooltip": 0,
-      "id": 29,
       "links": [],
       "liveNow": false,
       "panels": [
@@ -70,6 +69,7 @@ data:
                 "mode": "palette-classic"
               },
               "custom": {
+                "axisBorderShow": false,
                 "axisCenteredZero": false,
                 "axisColorMode": "text",
                 "axisLabel": "",
@@ -83,6 +83,7 @@ data:
                   "tooltip": false,
                   "viz": false
                 },
+                "insertNulls": false,
                 "lineInterpolation": "linear",
                 "lineWidth": 1,
                 "pointSize": 5,
@@ -179,7 +180,7 @@ data:
                 "uid": "lokiuid"
               },
               "editorMode": "code",
-              "expr": "{app=\"$environment\"} != `huey` != `elasticsearch` | json | __error__=``",
+              "expr": "{app=\"$environment\"} != `huey` != `elasticsearch` | json | __error__=`` | line_format \"[{{ .record_time_repr | trunc 16 }}] {{ .record_message }}\"",
               "queryType": "range",
               "refId": "A"
             }
@@ -216,7 +217,7 @@ data:
                 "uid": "lokiuid"
               },
               "editorMode": "code",
-              "expr": "{app=\"api-prod\"} |= \"huey\"",
+              "expr": "{app=\"api-prod\"} |= \"huey\" | json",
               "queryType": "range",
               "refId": "A"
             }
@@ -253,7 +254,7 @@ data:
                 "uid": "lokiuid"
               },
               "editorMode": "code",
-              "expr": "{app=\"$environment\"} |= \"elasticsearch\"",
+              "expr": "{app=\"$environment\"} |= \"$elasticsearch\" | json | line_format \"[{{ .record_time_repr | trunc 16 }}] {{ .record_message }}\"",
               "queryType": "range",
               "refId": "A"
             }
@@ -262,14 +263,13 @@ data:
           "type": "logs"
         }
       ],
-      "schemaVersion": 37,
-      "style": "dark",
+      "schemaVersion": 39,
       "tags": [],
       "templating": {
         "list": [
           {
             "current": {
-              "selected": true,
+              "selected": false,
               "text": "prd",
               "value": "api-prod"
             },
@@ -298,18 +298,25 @@ data:
             "queryValue": "",
             "skipUrlSync": false,
             "type": "custom"
+          },
+          {
+            "hide": 2,
+            "name": "elasticsearch",
+            "query": "elasticsearch",
+            "skipUrlSync": false,
+            "type": "constant"
           }
         ]
       },
       "time": {
-        "from": "now-1h",
+        "from": "now-6h",
         "to": "now"
       },
       "timepicker": {},
       "timezone": "",
       "title": "Base dos Dados / Backend",
       "uid": "Af1tq9SSk",
-      "version": 3,
+      "version": 1,
       "weekStart": ""
     }
 ---
@@ -348,7 +355,6 @@ data:
       "editable": true,
       "fiscalYearStartMonth": 0,
       "graphTooltip": 0,
-      "id": 30,
       "links": [],
       "liveNow": false,
       "panels": [
@@ -417,8 +423,8 @@ data:
                 "type": "loki",
                 "uid": "lokiuid"
               },
-              "editorMode": "builder",
-              "expr": "{app=\"metabase\"} |= `/api/health`",
+              "editorMode": "code",
+              "expr": "{app=\"metabase\"} |= \"$api_health\"",
               "queryType": "range",
               "refId": "A"
             }
@@ -427,11 +433,18 @@ data:
           "type": "logs"
         }
       ],
-      "schemaVersion": 37,
-      "style": "dark",
+      "schemaVersion": 39,
       "tags": [],
       "templating": {
-        "list": []
+        "list": [
+          {
+            "hide": 2,
+            "name": "api_health",
+            "query": "/api/health",
+            "skipUrlSync": false,
+            "type": "constant"
+          }
+        ]
       },
       "time": {
         "from": "now-3h",
@@ -441,138 +454,6 @@ data:
       "timezone": "",
       "title": "Base dos Dados / Metabase",
       "uid": "tnBIzCISz",
-      "version": 4,
-      "weekStart": ""
-    }
----
-apiVersion: v1
-kind: ConfigMap
-metadata:
-  name: grafana-dashboard-metadata
-  namespace: observability
-  labels:
-     grafana_dashboard: "1"
-data:
-  grafana-dashboard-metadata.json: |-
-    {
-      "annotations": {
-        "list": [
-          {
-            "builtIn": 1,
-            "datasource": {
-              "type": "grafana",
-              "uid": "-- Grafana --"
-            },
-            "enable": true,
-            "hide": true,
-            "iconColor": "rgba(0, 211, 255, 1)",
-            "name": "Annotations & Alerts",
-            "target": {
-              "limit": 100,
-              "matchAny": false,
-              "tags": [],
-              "type": "dashboard"
-            },
-            "type": "dashboard"
-          }
-        ]
-      },
-      "editable": true,
-      "fiscalYearStartMonth": 0,
-      "graphTooltip": 0,
-      "id": 27,
-      "links": [],
-      "liveNow": false,
-      "panels": [
-        {
-          "datasource": {
-            "type": "loki",
-            "uid": "_tn2YivSk"
-          },
-          "gridPos": {
-            "h": 23,
-            "w": 12,
-            "x": 0,
-            "y": 0
-          },
-          "id": 4,
-          "options": {
-            "dedupStrategy": "none",
-            "enableLogDetails": true,
-            "prettifyLogMessage": false,
-            "showCommonLabels": false,
-            "showLabels": false,
-            "showTime": false,
-            "sortOrder": "Descending",
-            "wrapLogMessage": false
-          },
-          "targets": [
-            {
-              "datasource": {
-                "type": "loki",
-                "uid": "_tn2YivSk"
-              },
-              "editorMode": "code",
-              "expr": "{app=\"api-prod\"} | json | record_extra_module = `api.v1` | label_format level=\"{{.record_level_name}}\" | line_format `{{.record_message}}` | record_level_name != `INFO`",
-              "queryType": "range",
-              "refId": "A"
-            }
-          ],
-          "title": "Panel Title",
-          "type": "logs"
-        },
-        {
-          "datasource": {
-            "type": "loki",
-            "uid": "_tn2YivSk"
-          },
-          "gridPos": {
-            "h": 23,
-            "w": 12,
-            "x": 12,
-            "y": 0
-          },
-          "id": 2,
-          "options": {
-            "dedupStrategy": "none",
-            "enableLogDetails": true,
-            "prettifyLogMessage": false,
-            "showCommonLabels": false,
-            "showLabels": false,
-            "showTime": false,
-            "sortOrder": "Descending",
-            "wrapLogMessage": false
-          },
-          "targets": [
-            {
-              "datasource": {
-                "type": "loki",
-                "uid": "_tn2YivSk"
-              },
-              "editorMode": "code",
-              "expr": "{app=\"api-prod\"} | json | record_extra_module = `api.v1` | label_format level=\"{{.record_level_name}}\" | line_format `{{.record_message}}` | record_level_name = `INFO`",
-              "queryType": "range",
-              "refId": "A"
-            }
-          ],
-          "title": "Logs da atualização de metadados",
-          "type": "logs"
-        }
-      ],
-      "schemaVersion": 37,
-      "style": "dark",
-      "tags": [],
-      "templating": {
-        "list": []
-      },
-      "time": {
-        "from": "now-6h",
-        "to": "now"
-      },
-      "timepicker": {},
-      "timezone": "",
-      "title": "Base dos Dados / Metadados de Tabelas",
-      "uid": "_Lq-p0DIk",
-      "version": 2,
+      "version": 1,
       "weekStart": ""
     }
