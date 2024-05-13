@@ -217,7 +217,7 @@ data:
                 "uid": "lokiuid"
               },
               "editorMode": "code",
-              "expr": "{app=\"api-prod\"} |= \"$huey\"",
+              "expr": "{app=\"$environment\"} |= \"$huey\"",
               "queryType": "range",
               "refId": "A"
             }
@@ -269,7 +269,7 @@ data:
         "list": [
           {
             "current": {
-              "selected": false,
+              "selected": true,
               "text": "prd",
               "value": "api-prod"
             },
@@ -323,7 +323,7 @@ data:
       "timezone": "",
       "title": "Base dos Dados / Backend",
       "uid": "Af1tq9SSk",
-      "version": 2,
+      "version": 3,
       "weekStart": ""
     }
 ---
