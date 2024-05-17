@@ -330,6 +330,218 @@ data:
 apiVersion: v1
 kind: ConfigMap
 metadata:
+  name: grafana-dashboard-frontend
+  namespace: observability
+  labels:
+    grafana_dashboard: "1"
+data:
+  grafana-dashboard-frontend.json: |-
+    {
+      "annotations": {
+        "list": [
+          {
+            "builtIn": 1,
+            "datasource": {
+              "type": "grafana",
+              "uid": "-- Grafana --"
+            },
+            "enable": true,
+            "hide": true,
+            "iconColor": "rgba(0, 211, 255, 1)",
+            "name": "Annotations & Alerts",
+            "type": "dashboard"
+          }
+        ]
+      },
+      "editable": true,
+      "fiscalYearStartMonth": 0,
+      "graphTooltip": 0,
+      "id": 89,
+      "links": [],
+      "panels": [
+        {
+          "datasource": {
+            "type": "loki",
+            "uid": "lokiuid"
+          },
+          "fieldConfig": {
+            "defaults": {
+              "color": {
+                "mode": "palette-classic"
+              },
+              "custom": {
+                "axisBorderShow": false,
+                "axisCenteredZero": false,
+                "axisColorMode": "text",
+                "axisLabel": "",
+                "axisPlacement": "auto",
+                "barAlignment": 0,
+                "drawStyle": "line",
+                "fillOpacity": 0,
+                "gradientMode": "none",
+                "hideFrom": {
+                  "legend": false,
+                  "tooltip": false,
+                  "viz": false
+                },
+                "insertNulls": false,
+                "lineInterpolation": "linear",
+                "lineWidth": 1,
+                "pointSize": 5,
+                "scaleDistribution": {
+                  "type": "linear"
+                },
+                "showPoints": "auto",
+                "spanNulls": false,
+                "stacking": {
+                  "group": "A",
+                  "mode": "none"
+                },
+                "thresholdsStyle": {
+                  "mode": "off"
+                }
+              },
+              "mappings": [],
+              "thresholds": {
+                "mode": "absolute",
+                "steps": [
+                  {
+                    "color": "green",
+                    "value": null
+                  },
+                  {
+                    "color": "red",
+                    "value": 80
+                  }
+                ]
+              }
+            },
+            "overrides": []
+          },
+          "gridPos": {
+            "h": 5,
+            "w": 24,
+            "x": 0,
+            "y": 0
+          },
+          "id": 2,
+          "options": {
+            "legend": {
+              "calcs": [],
+              "displayMode": "list",
+              "placement": "bottom",
+              "showLegend": true
+            },
+            "tooltip": {
+              "mode": "single",
+              "sort": "none"
+            }
+          },
+          "targets": [
+            {
+              "datasource": {
+                "type": "loki",
+                "uid": "lokiuid"
+              },
+              "editorMode": "code",
+              "expr": "sum(count_over_time({app=\"$environment\"} [$__interval]))",
+              "queryType": "range",
+              "refId": "A"
+            }
+          ],
+          "title": "Requisições (Backend do Next)",
+          "type": "timeseries"
+        },
+        {
+          "datasource": {
+            "type": "loki",
+            "uid": "lokiuid"
+          },
+          "gridPos": {
+            "h": 17,
+            "w": 24,
+            "x": 0,
+            "y": 5
+          },
+          "id": 1,
+          "options": {
+            "dedupStrategy": "none",
+            "enableLogDetails": true,
+            "prettifyLogMessage": false,
+            "showCommonLabels": false,
+            "showLabels": false,
+            "showTime": false,
+            "sortOrder": "Descending",
+            "wrapLogMessage": false
+          },
+          "targets": [
+            {
+              "datasource": {
+                "type": "loki",
+                "uid": "lokiuid"
+              },
+              "editorMode": "code",
+              "expr": "{app=\"$environment\"} | json",
+              "queryType": "range",
+              "refId": "A"
+            }
+          ],
+          "title": "Logs (Backend do Next)",
+          "type": "logs"
+        }
+      ],
+      "schemaVersion": 39,
+      "tags": [],
+      "templating": {
+        "list": [
+          {
+            "current": {
+              "selected": false,
+              "text": "prd",
+              "value": "basedosdados-website-production"
+            },
+            "hide": 0,
+            "includeAll": false,
+            "multi": false,
+            "name": "environment",
+            "options": [
+              {
+                "selected": true,
+                "text": "prd",
+                "value": "basedosdados-website-production"
+              },
+              {
+                "selected": false,
+                "text": "stg",
+                "value": "basedosdados-website-staging"
+              },
+              {
+                "selected": false,
+                "text": "dev",
+                "value": "basedosdados-website-development"
+              }
+            ],
+            "query": "prd : basedosdados-website-production,stg : basedosdados-website-staging,dev : basedosdados-website-development",
+            "skipUrlSync": false,
+            "type": "custom"
+          }
+        ]
+      },
+      "time": {
+        "from": "now-6h",
+        "to": "now"
+      },
+      "timepicker": {},
+      "timezone": "browser",
+      "title": "Base dos Dados / Frontend",
+      "uid": "ddlxr5rtomo74b",
+      "version": 5,
+      "weekStart": ""
+    }
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
   name: grafana-dashboard-metabase
   namespace: observability
   labels:
