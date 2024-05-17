@@ -542,6 +542,241 @@ data:
 apiVersion: v1
 kind: ConfigMap
 metadata:
+  name: grafana-dashboard-pipelines
+  namespace: observability
+  labels:
+    grafana_dashboard: "1"
+data:
+  grafana-dashboard-pipelines.json: |-
+    {
+      "annotations": {
+        "list": [
+          {
+            "builtIn": 1,
+            "datasource": {
+              "type": "grafana",
+              "uid": "-- Grafana --"
+            },
+            "enable": true,
+            "hide": true,
+            "iconColor": "rgba(0, 211, 255, 1)",
+            "name": "Annotations & Alerts",
+            "type": "dashboard"
+          }
+        ]
+      },
+      "editable": true,
+      "fiscalYearStartMonth": 0,
+      "graphTooltip": 0,
+      "id": 90,
+      "links": [],
+      "panels": [
+        {
+          "datasource": {
+            "type": "loki",
+            "uid": "lokiuid"
+          },
+          "gridPos": {
+            "h": 8,
+            "w": 11,
+            "x": 0,
+            "y": 0
+          },
+          "id": 3,
+          "options": {
+            "dedupStrategy": "none",
+            "enableLogDetails": true,
+            "prettifyLogMessage": false,
+            "showCommonLabels": false,
+            "showLabels": false,
+            "showTime": false,
+            "sortOrder": "Descending",
+            "wrapLogMessage": false
+          },
+          "targets": [
+            {
+              "datasource": {
+                "type": "loki",
+                "uid": "lokiuid"
+              },
+              "editorMode": "code",
+              "expr": "{app=\"prefect-server\"} | json | __error__=\"\" | line_format \"[{{ .timestamp | trunc 16 }}] {{ .detail_http_info_method }} {{ .detail_http_info_url }}\"",
+              "queryType": "range",
+              "refId": "A"
+            }
+          ],
+          "title": "Prefect Server",
+          "type": "logs"
+        },
+        {
+          "datasource": {
+            "type": "loki",
+            "uid": "lokiuid"
+          },
+          "gridPos": {
+            "h": 16,
+            "w": 11,
+            "x": 11,
+            "y": 0
+          },
+          "id": 1,
+          "options": {
+            "dedupStrategy": "none",
+            "enableLogDetails": true,
+            "prettifyLogMessage": false,
+            "showCommonLabels": false,
+            "showLabels": false,
+            "showTime": false,
+            "sortOrder": "Descending",
+            "wrapLogMessage": false
+          },
+          "targets": [
+            {
+              "datasource": {
+                "type": "loki",
+                "uid": "lokiuid"
+              },
+              "editorMode": "code",
+              "expr": "{app=\"prefect-job\"}",
+              "queryType": "range",
+              "refId": "A"
+            }
+          ],
+          "title": "Prefect Job",
+          "type": "logs"
+        },
+        {
+          "datasource": {
+            "type": "loki",
+            "uid": "lokiuid"
+          },
+          "gridPos": {
+            "h": 8,
+            "w": 11,
+            "x": 0,
+            "y": 8
+          },
+          "id": 2,
+          "options": {
+            "dedupStrategy": "none",
+            "enableLogDetails": true,
+            "prettifyLogMessage": false,
+            "showCommonLabels": false,
+            "showLabels": false,
+            "showTime": false,
+            "sortOrder": "Descending",
+            "wrapLogMessage": false
+          },
+          "targets": [
+            {
+              "datasource": {
+                "type": "loki",
+                "uid": "lokiuid"
+              },
+              "editorMode": "code",
+              "expr": "{app=\"prefect-agent\"}",
+              "queryType": "range",
+              "refId": "A"
+            }
+          ],
+          "title": "Prefect Agent",
+          "type": "logs"
+        },
+        {
+          "datasource": {
+            "type": "loki",
+            "uid": "lokiuid"
+          },
+          "gridPos": {
+            "h": 8,
+            "w": 11,
+            "x": 0,
+            "y": 16
+          },
+          "id": 4,
+          "options": {
+            "dedupStrategy": "none",
+            "enableLogDetails": true,
+            "prettifyLogMessage": false,
+            "showCommonLabels": false,
+            "showLabels": false,
+            "showTime": false,
+            "sortOrder": "Descending",
+            "wrapLogMessage": false
+          },
+          "targets": [
+            {
+              "datasource": {
+                "type": "loki",
+                "uid": "lokiuid"
+              },
+              "editorMode": "code",
+              "expr": "{app=\"dbt-rpc-prod\"}",
+              "queryType": "range",
+              "refId": "A"
+            }
+          ],
+          "title": "dbt production",
+          "type": "logs"
+        },
+        {
+          "datasource": {
+            "type": "loki",
+            "uid": "lokiuid"
+          },
+          "gridPos": {
+            "h": 8,
+            "w": 11,
+            "x": 11,
+            "y": 16
+          },
+          "id": 5,
+          "options": {
+            "dedupStrategy": "none",
+            "enableLogDetails": true,
+            "prettifyLogMessage": false,
+            "showCommonLabels": false,
+            "showLabels": false,
+            "showTime": false,
+            "sortOrder": "Descending",
+            "wrapLogMessage": false
+          },
+          "targets": [
+            {
+              "datasource": {
+                "type": "loki",
+                "uid": "lokiuid"
+              },
+              "editorMode": "code",
+              "expr": "{app=\"dbt-rpc-dev\"}",
+              "queryType": "range",
+              "refId": "A"
+            }
+          ],
+          "title": "dbt development",
+          "type": "logs"
+        }
+      ],
+      "schemaVersion": 39,
+      "tags": [],
+      "templating": {
+        "list": []
+      },
+      "time": {
+        "from": "now-6h",
+        "to": "now"
+      },
+      "timepicker": {},
+      "timezone": "browser",
+      "title": "Base dos Dados / Pipelines",
+      "uid": "cdlzb0owwly4gd",
+      "version": 2,
+      "weekStart": ""
+    }
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
   name: grafana-dashboard-metabase
   namespace: observability
   labels:
