@@ -180,7 +180,7 @@ data:
                 "uid": "lokiuid"
               },
               "editorMode": "code",
-              "expr": "{app=\"$environment\"} != `huey` != `elasticsearch` | json | __error__=`` | line_format \"[{{ .record_time_repr | trunc 16 }}] {{ .record_message }}\"",
+              "expr": "{app=\"$environment\"} != `huey` != `elasticsearch` != `Unauthorized` | json | __error__=`` | line_format \"[{{ .record_time_repr | trunc 16 }}] {{ .record_message }}\"",
               "queryType": "range",
               "refId": "A"
             }
@@ -323,7 +323,7 @@ data:
       "timezone": "",
       "title": "Base dos Dados / Backend",
       "uid": "Af1tq9SSk",
-      "version": 3,
+      "version": 4,
       "weekStart": ""
     }
 ---
