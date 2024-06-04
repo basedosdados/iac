@@ -22,6 +22,8 @@ lokiCanary:
   enabled: false
 singleBinary:
   replicas: 1
+  persistence:
+    size: 100Gi
 backend:
   replicas: 0
 read:
