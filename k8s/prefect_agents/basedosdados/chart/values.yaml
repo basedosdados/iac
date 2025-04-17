@@ -14,7 +14,7 @@ agent:
       requests:
         cpu: ''
         memory: ''
-  jobTemplateFilePath: https://storage.googleapis.com/basedosdados-dev/prefect_job_template/job_template.yaml
+  jobTemplateFilePath: https://storage.googleapis.com/basedosdados-dev/prefect_job_template/template.yaml
   name: prefect-agent
   prefectLabels:
   - basedosdados
