@@ -17,7 +17,19 @@ spec:
         - name: gcp-sa
           mountPath: /mnt/
           readOnly: true
+        - name: credentials-dev
+          mountPath: /credentials-dev/
+          readOnly: true
+        - name: credentials-prod
+          mountPath: /credentials-prod/
+          readOnly: true
       volumes:
       - name: gcp-sa
         secret:
           secretName: gcp-sa
+      - name: credentials-dev
+        secret:
+          secretName: credentials-dev
+      - name: credentials-prod
+        secret:
+          secretName: credentials-prod

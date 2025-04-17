@@ -182,7 +182,7 @@ agent:
   enabled: true
   prefectLabels:
   - basedosdados-dev
-  jobTemplateFilePath: https://storage.googleapis.com/basedosdados-dev/prefect_job_template/job_template.yaml
+  jobTemplateFilePath: https://storage.googleapis.com/basedosdados-dev/prefect_job_template/template.yaml
   image:
     name: prefecthq/prefect
     tag:
