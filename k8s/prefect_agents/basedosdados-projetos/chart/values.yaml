@@ -1,4 +1,4 @@
-# helm install prefect-agent prefeitura-rio/prefect-agent -n prefect-agent-basedosdados-projetos -f values.yaml
+# helm upgrade --install prefect-agent prefeitura-rio/prefect-agent -n prefect-agent-basedosdados-projetos -f values.yaml
 
 agent:
   name: prefect-agent
