@@ -1,4 +1,5 @@
-# helm upgrade --install prefect -n prefect prefecthq/prefect-server -f values.yaml
+# helm repo add prefecthq https://prefecthq.github.io/server
+# helm upgrade --install prefect -n prefect prefecthq/prefect-server -f values.yaml --version 2022.09.07
 serverVersionTag: core-0.15.9
 
 prefectVersionTag: 0.15.9
@@ -182,7 +183,7 @@ agent:
   enabled: true
   prefectLabels:
   - basedosdados-dev
-  jobTemplateFilePath: https://storage.googleapis.com/basedosdados-dev/prefect_job_template/job_template.yaml
+  jobTemplateFilePath: https://storage.googleapis.com/basedosdados-dev/prefect_job_template/template.yaml
   image:
     name: prefecthq/prefect
     tag:
