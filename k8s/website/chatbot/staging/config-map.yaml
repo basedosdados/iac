@@ -6,13 +6,13 @@ metadata:
 data:
   BASEDOSDADOS_BASE_URL: https://staging.backend.basedosdados.org
   DB_HOST: cloud-sql-proxy
+  DB_NAME: chatbot_staging
   DB_PORT: "5432"
   DB_USER: chatbot_staging
-  DB_NAME: chatbot_staging
   GOOGLE_BIGQUERY_PROJECT: basedosdados
   GOOGLE_SERVICE_ACCOUNT: /var/secrets/chatbot-sa.json
   LANGSMITH_PROJECT: staging
   LANGSMITH_TRACING: "true"
-  MODEL_URI: google_genai:gemini-2.5-flash
-  MODEL_TEMPERATURE: "0.2"
   MAX_TOKENS: "524288"
+  MODEL_TEMPERATURE: "0.2"
+  MODEL_URI: google_genai:gemini-2.5-flash
