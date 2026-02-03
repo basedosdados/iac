@@ -1,0 +1,10 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: chatbot-api-staging-config
+  namespace: website
+data:
+  DB_HOST: cloud-sql-proxy
+  DB_PORT: "5432"
+  DB_USER: chatbot_staging
+  DB_NAME: chatbot_staging
