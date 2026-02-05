@@ -1,0 +1,19 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: chatbot-api-prod-config
+  namespace: website
+data:
+  BASEDOSDADOS_BASE_URL: https://backend.basedosdados.org
+  DB_HOST: cloud-sql-proxy
+  DB_NAME: chatbot
+  DB_PORT: "5432"
+  DB_USER: chatbot
+  ENVIRONMENT: production
+  GOOGLE_BIGQUERY_PROJECT: basedosdados
+  GOOGLE_SERVICE_ACCOUNT: /var/secrets/chatbot-sa.json
+  LANGSMITH_PROJECT: prod
+  LANGSMITH_TRACING: "true"
+  MAX_TOKENS: "524288"
+  MODEL_TEMPERATURE: "0.2"
+  MODEL_URI: google_genai:gemini-2.5-flash
