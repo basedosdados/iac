@@ -4,7 +4,7 @@ metadata:
   name: chatbot-api-staging-config
   namespace: website
 data:
-  BASEDOSDADOS_BASE_URL: https://staging.backend.basedosdados.org
+  BASEDOSDADOS_BASE_URL: http://api-staging-service:80
   DB_HOST: cloud-sql-proxy
   DB_NAME: chatbot_staging
   DB_PORT: "5432"
