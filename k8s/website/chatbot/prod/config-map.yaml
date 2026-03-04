@@ -4,7 +4,7 @@ metadata:
   name: chatbot-api-prod-config
   namespace: website
 data:
-  BASEDOSDADOS_BASE_URL: https://backend.basedosdados.org
+  BASEDOSDADOS_BASE_URL: http://api-prod-service:80
   DB_HOST: cloud-sql-proxy
   DB_NAME: chatbot
   DB_PORT: "5432"
