@@ -14,5 +14,6 @@ data:
   GOOGLE_SERVICE_ACCOUNT: /var/secrets/chatbot-sa.json
   LANGSMITH_PROJECT: staging
   LANGSMITH_TRACING: "true"
-  MODEL_TEMPERATURE: "0.2"
-  MODEL_URI: google_genai:gemini-2.5-flash
+  MODEL_TEMPERATURE: "1.0"
+  MODEL_URI: google_genai:gemini-3-flash-preview
+  THINKING_LEVEL: low
