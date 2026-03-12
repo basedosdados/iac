@@ -24,6 +24,18 @@ resource "random_password" "api_db_password" {
   override_special = "!#$%&*()-_=+[]{}<>:?"
 }
 
+resource "random_password" "chatbot_staging_db_password" {
+  length           = 22
+  special          = true
+  override_special = "!#$%&*()-_=+[]{}<>:?"
+}
+
+resource "random_password" "chatbot_db_password" {
+  length           = 22
+  special          = true
+  override_special = "!#$%&*()-_=+[]{}<>:?"
+}
+
 # ...........................................................................
 # Write data to Secret Manager
 # https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/secret_manager_secret
@@ -65,6 +77,32 @@ resource "google_secret_manager_secret" "api_db_password" {
 resource "google_secret_manager_secret_version" "api_db_password" {
   secret      = google_secret_manager_secret.api_db_password.id
   secret_data = random_password.api_db_password.result
+}
+
+resource "google_secret_manager_secret" "chatbot_staging_db_password" {
+  secret_id = "chatbot-staging-db-password"
+
+  replication {
+    automatic = true
+  }
+}
+
+resource "google_secret_manager_secret_version" "chatbot_staging_db_password" {
+  secret      = google_secret_manager_secret.chatbot_staging_db_password.id
+  secret_data = random_password.chatbot_staging_db_password.result
+}
+
+resource "google_secret_manager_secret" "chatbot_db_password" {
+  secret_id = "chatbot-db-password"
+
+  replication {
+    automatic = true
+  }
+}
+
+resource "google_secret_manager_secret_version" "chatbot_db_password" {
+  secret      = google_secret_manager_secret.chatbot_db_password.id
+  secret_data = random_password.chatbot_db_password.result
 }
 
 # ...........................................................................
@@ -125,6 +163,28 @@ resource "google_sql_user" "api_staging" {
   name     = var.sql_api_staging_user_name
   instance = google_sql_database_instance.main.name
   password = random_password.api_staging_db_password.result
+}
+
+resource "google_sql_database" "chatbot" {
+  name     = "chatbot"
+  instance = google_sql_database_instance.main.name
+}
+
+resource "google_sql_user" "chatbot" {
+  name     = "chatbot"
+  instance = google_sql_database_instance.main.name
+  password = random_password.chatbot_db_password.result
+}
+
+resource "google_sql_database" "chatbot_staging" {
+  name     = "chatbot_staging"
+  instance = google_sql_database_instance.main.name
+}
+
+resource "google_sql_user" "chatbot_staging" {
+  name     = "chatbot_staging"
+  instance = google_sql_database_instance.main.name
+  password = random_password.chatbot_staging_db_password.result
 }
 
 resource "google_sql_database" "api_development" {
