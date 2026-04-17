@@ -1,0 +1,58 @@
+# helm repo add prefecthq https://prefecthq.github.io/prefect-helm
+# helm upgrade --install prefect-server -n prefect3 prefecthq/prefect-server -f values.yaml
+
+# Garante que o service se chame "prefect-server" (referenciado no ingress.yaml)
+fullnameOverride: "prefect-server"
+
+global:
+  prefect:
+    image:
+      prefectTag: "3-latest"
+      pullPolicy: IfNotPresent
+
+server:
+  replicaCount: 1
+
+  # URL pública da API — usada pelo UI para fazer chamadas ao backend
+  uiConfig:
+    prefectUiApiUrl: "https://prefect3.basedosdados.org/api"
+
+  loggingLevel: WARNING
+
+  resources:
+    requests:
+      cpu: 100m
+      memory: 128Mi
+    limits:
+      cpu: 500m
+      memory: 256Mi
+
+serviceAccount:
+  create: true
+  name: "prefect-server"
+
+service:
+  port: 4200
+  targetPort: 4200
+  type: ClusterIP
+
+# Ingress gerenciado externamente via k8s/prefect3/ingress.yaml
+ingress:
+  enabled: false
+
+# Secret com a connection string do banco, gerenciado via sealed secret
+# Estrutura esperada pelo chart: chave "connection-string" com valor:
+#   postgresql+asyncpg://prefect3:<senha>@cloud-sql-proxy:5432/prefect3
+# Criado em k8s/prefect3/secret-00_sealed.yaml após o terraform apply
+secret:
+  create: false
+  name: "prefect3-db-connection"
+
+# PostgreSQL externo via cloud-sql-proxy (ver db-service.yaml)
+postgresql:
+  enabled: false
+
+# Modo single-deployment: background services rodam junto com o server
+# Redis só é necessário se runAsSeparateDeployment=true
+redis:
+  enabled: false
