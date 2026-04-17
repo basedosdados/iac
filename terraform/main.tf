@@ -43,6 +43,8 @@ module "cloudsql" {
   sql_prefect_user_name       = var.sql_prefect_user_name
   sql_prefect_user_password   = var.sql_prefect_user_password
   sql_prefect_db_name         = var.sql_prefect_db_name
+  sql_prefect3_user_name      = var.sql_prefect3_user_name
+  sql_prefect3_db_name        = var.sql_prefect3_db_name
 }
 
 module "cloudsql_mysql" {

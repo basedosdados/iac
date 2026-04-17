@@ -170,3 +170,33 @@ resource "google_sql_database" "prefect" {
   name     = var.sql_prefect_db_name
   instance = google_sql_database_instance.main.name
 }
+
+resource "random_password" "prefect3_db_password" {
+  length           = 22
+  special          = true
+  override_special = "!#$%&*()-_=+[]{}<>:?"
+}
+
+resource "google_secret_manager_secret" "prefect3_db_password" {
+  secret_id = "prefect3-db-password"
+
+  replication {
+    automatic = true
+  }
+}
+
+resource "google_secret_manager_secret_version" "prefect3_db_password" {
+  secret      = google_secret_manager_secret.prefect3_db_password.id
+  secret_data = random_password.prefect3_db_password.result
+}
+
+resource "google_sql_user" "prefect3" {
+  name     = var.sql_prefect3_user_name
+  instance = google_sql_database_instance.main.name
+  password = random_password.prefect3_db_password.result
+}
+
+resource "google_sql_database" "prefect3" {
+  name     = var.sql_prefect3_db_name
+  instance = google_sql_database_instance.main.name
+}
