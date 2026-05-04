@@ -1,0 +1,29 @@
+# helm repo add prefecthq https://prefecthq.github.io/prefect-helm
+# helm upgrade --install prefect-worker-basedosdados-dev -n prefect-worker-basedosdados-dev prefecthq/prefect-worker -f values.yaml
+
+worker:
+  apiConfig: selfHostedServer
+
+  selfHostedServerApiConfig:
+    apiUrl: "http://prefect-server.prefect3.svc.cluster.local:4200/api"
+
+  config:
+    workPool: "basedosdados-dev"
+
+  replicaCount: 1
+
+  image:
+    prefectTag: "3-latest"
+    pullPolicy: IfNotPresent
+
+  resources:
+    requests:
+      cpu: 100m
+      memory: 128Mi
+    limits:
+      cpu: 500m
+      memory: 256Mi
+
+serviceAccount:
+  create: true
+  name: "prefect-worker-basedosdados-dev"
