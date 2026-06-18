@@ -56,8 +56,8 @@ hasura:
   env: []
   resources:
     requests:
-      cpu: 500m
-      memory: 1Gi
+      cpu: 10m
+      memory: 192Mi
   nodeSelector: {}
   tolerations: []
   affinity: {}
@@ -75,15 +75,15 @@ graphql:
 
   labels: {}
   annotations: {}
-  replicas: 2
+  replicas: 1
   strategy: {}
   podSecurityContext: {}
   securityContext: {}
   env: {}
   resources:
     requests:
-      cpu: 100m
-      memory: 256Mi
+      cpu: 10m
+      memory: 64Mi
   nodeSelector: {}
   tolerations: []
   affinity: {}
@@ -115,15 +115,15 @@ apollo:
 
   labels: {}
   annotations: {}
-  replicas: 2
+  replicas: 1
   strategy: {}
   podSecurityContext: {}
   securityContext: {}
   env: {}
   resources:
     requests:
-      cpu: 300m
-      memory: 256Mi
+      cpu: 10m
+      memory: 64Mi
   nodeSelector: {}
   tolerations: []
   affinity: {}
@@ -155,7 +155,10 @@ ui:
   podSecurityContext: {}
   securityContext: {}
   env: {}
-  resources: {}
+  resources:
+    requests:
+      cpu: 10m
+      memory: 16Mi
   nodeSelector: {}
   tolerations: []
   affinity: {}
@@ -174,7 +177,10 @@ towel:
   podSecurityContext: {}
   securityContext: {}
   env: {}
-  resources: {}
+  resources:
+    requests:
+      cpu: 10m
+      memory: 80Mi
   nodeSelector: {}
   tolerations: []
   affinity: {}
@@ -192,7 +198,7 @@ agent:
 
   labels: {}
   annotations: {}
-  replicas: 1
+  replicas: 0
   strategy: {}
   podSecurityContext: {}
   securityContext: {}

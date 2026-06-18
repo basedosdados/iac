@@ -18,7 +18,7 @@ agent:
   name: prefect-agent
   prefectLabels:
   - basedosdados
-  replicas: 1
+  replicas: 0
   resources:
     limits:
       cpu: 100m
