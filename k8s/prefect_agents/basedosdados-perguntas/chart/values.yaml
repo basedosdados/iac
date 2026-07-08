@@ -7,7 +7,7 @@ agent:
   vertexServiceAccount: ''
   prefectLabels:
   - basedosdados-perguntas
-  replicas: 1
+  replicas: 0
   image:
     name: prefecthq/prefect
     tag: 0.15.9
