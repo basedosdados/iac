@@ -128,6 +128,18 @@ variable "sql_prefect_db_name" {
   default     = "prefect"
 }
 
+variable "sql_prefect3_user_name" {
+  type        = string
+  description = "The name of the Prefect 3 database user."
+  default     = "prefect3"
+}
+
+variable "sql_prefect3_db_name" {
+  type        = string
+  description = "The name of the Prefect 3 database."
+  default     = "prefect3"
+}
+
 ############################################################################
 # Cloud SQL MySQL
 ############################################################################

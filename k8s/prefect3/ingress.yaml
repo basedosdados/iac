@@ -1,0 +1,27 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: prefect3-ingress
+  namespace: prefect3
+  annotations:
+    nginx.ingress.kubernetes.io/auth-url: https://backend.basedosdados.org/auth/
+    nginx.ingress.kubernetes.io/auth-signin: https://backend.basedosdados.org/auth/login/?rd=https://$host$request_uri$is_args$args
+    cert-manager.io/issuer: letsencrypt-production
+    nginx.ingress.kubernetes.io/ssl-redirect: 'true'
+spec:
+  ingressClassName: nginx
+  tls:
+  - hosts:
+    - prefect3.basedosdados.org
+    secretName: prefect3-tls
+  rules:
+  - host: prefect3.basedosdados.org
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: prefect-server
+            port:
+              number: 4200
