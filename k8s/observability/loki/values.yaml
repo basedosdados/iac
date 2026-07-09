@@ -16,11 +16,6 @@ loki:
   storage:
     type: filesystem
   auth_enabled: false
-  limits_config:
-    retention_period: 4320h  # 6 meses
-  compactor:
-    retention_enabled: true
-    delete_request_store: filesystem
 test:
   enabled: false
 lokiCanary:
@@ -35,7 +30,3 @@ read:
   replicas: 0
 write:
   replicas: 0
-chunksCache:
-  allocatedMemory: 512
-resultsCache:
-  allocatedMemory: 64
