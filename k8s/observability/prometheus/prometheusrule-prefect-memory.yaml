@@ -1,0 +1,17 @@
+apiVersion: monitoring.coreos.com/v1
+kind: PrometheusRule
+metadata:
+  name: prefect-flow-memory
+  namespace: observability
+  labels:
+    release: prometheus
+spec:
+  groups:
+  - name: prefect.flow.memory
+    interval: 1m
+    rules:
+    - record: prefect_job_memory_bytes
+      expr: |
+        container_memory_working_set_bytes{namespace=~"prefect-worker-basedosdados.*", container="prefect-job"}
+        * on(pod, namespace) group_left(label_prefect_io_deployment_name)
+        kube_pod_labels{namespace=~"prefect-worker-basedosdados.*"}
