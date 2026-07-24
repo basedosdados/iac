@@ -1036,7 +1036,7 @@ grafana:
       enabled: true
       org_name: Main Org.
       org_role: Editor
-    
+
     disable_login_form: true
 
   sidecar:
@@ -2003,6 +2003,8 @@ kube-state-metrics:
   rbac:
     create: true
   releaseLabel: true
+  extraArgs:
+    - --metric-labels-allowlist=pods=[prefect.io/deployment-name]
   prometheus:
     monitor:
       enabled: true

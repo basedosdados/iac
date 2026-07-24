@@ -573,40 +573,77 @@ data:
       "panels": [
         {
           "datasource": {
-            "type": "loki",
-            "uid": "lokiuid"
+            "type": "prometheus",
+            "uid": "prometheus"
+          },
+          "fieldConfig": {
+            "defaults": {
+              "color": { "mode": "palette-classic" },
+              "custom": { "lineWidth": 2 },
+              "unit": "short"
+            }
           },
           "gridPos": {
             "h": 8,
-            "w": 11,
+            "w": 12,
             "x": 0,
             "y": 0
           },
           "id": 3,
           "options": {
-            "dedupStrategy": "none",
-            "enableLogDetails": true,
-            "prettifyLogMessage": false,
-            "showCommonLabels": false,
-            "showLabels": false,
-            "showTime": false,
-            "sortOrder": "Descending",
-            "wrapLogMessage": false
+            "legend": { "calcs": ["mean", "max"], "displayMode": "list", "placement": "bottom" },
+            "tooltip": { "mode": "single" }
           },
           "targets": [
             {
-              "datasource": {
-                "type": "loki",
-                "uid": "lokiuid"
-              },
-              "editorMode": "code",
-              "expr": "{app=\"prefect-server\"} | json | __error__=\"\" | line_format \"[{{ .timestamp | trunc 16 }}] {{ .detail_http_info_method }} {{ .detail_http_info_url }}\"",
-              "queryType": "range",
+              "datasource": { "type": "prometheus", "uid": "prometheus" },
+              "expr": "rate(container_cpu_usage_seconds_total{namespace=\"prefect3\", container=\"prefect-server\"}[5m])",
+              "legendFormat": "CPU (cores)",
               "refId": "A"
             }
           ],
-          "title": "Prefect Server",
-          "type": "logs"
+          "title": "Prefect Server — CPU",
+          "type": "timeseries"
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "prometheus"
+          },
+          "fieldConfig": {
+            "defaults": {
+              "color": { "mode": "palette-classic" },
+              "custom": { "lineWidth": 2 },
+              "unit": "bytes"
+            }
+          },
+          "gridPos": {
+            "h": 8,
+            "w": 12,
+            "x": 12,
+            "y": 0
+          },
+          "id": 6,
+          "options": {
+            "legend": { "calcs": ["mean", "max"], "displayMode": "list", "placement": "bottom" },
+            "tooltip": { "mode": "single" }
+          },
+          "targets": [
+            {
+              "datasource": { "type": "prometheus", "uid": "prometheus" },
+              "expr": "container_memory_working_set_bytes{namespace=\"prefect3\", container=\"prefect-server\"}",
+              "legendFormat": "Memória usada",
+              "refId": "A"
+            },
+            {
+              "datasource": { "type": "prometheus", "uid": "prometheus" },
+              "expr": "kube_pod_container_resource_limits{namespace=\"prefect3\", container=\"prefect-server\", resource=\"memory\"}",
+              "legendFormat": "Limite",
+              "refId": "B"
+            }
+          ],
+          "title": "Prefect Server — Memória",
+          "type": "timeseries"
         },
         {
           "datasource": {
@@ -615,9 +652,9 @@ data:
           },
           "gridPos": {
             "h": 16,
-            "w": 11,
-            "x": 11,
-            "y": 0
+            "w": 12,
+            "x": 0,
+            "y": 8
           },
           "id": 1,
           "options": {
@@ -637,12 +674,12 @@ data:
                 "uid": "lokiuid"
               },
               "editorMode": "code",
-              "expr": "{app=\"prefect-job\"}",
+              "expr": "{namespace=\"prefect-worker-basedosdados\"}",
               "queryType": "range",
               "refId": "A"
             }
           ],
-          "title": "Prefect Job",
+          "title": "Flow Runs — Produção",
           "type": "logs"
         },
         {
@@ -651,9 +688,9 @@ data:
             "uid": "lokiuid"
           },
           "gridPos": {
-            "h": 8,
-            "w": 11,
-            "x": 0,
+            "h": 16,
+            "w": 12,
+            "x": 12,
             "y": 8
           },
           "id": 2,
@@ -674,87 +711,111 @@ data:
                 "uid": "lokiuid"
               },
               "editorMode": "code",
-              "expr": "{app=\"prefect-agent\"}",
+              "expr": "{namespace=\"prefect-worker-basedosdados-dev\"}",
               "queryType": "range",
               "refId": "A"
             }
           ],
-          "title": "Prefect Agent",
+          "title": "Flow Runs — Desenvolvimento",
           "type": "logs"
         },
         {
           "datasource": {
-            "type": "loki",
-            "uid": "lokiuid"
+            "type": "prometheus",
+            "uid": "prometheus"
+          },
+          "fieldConfig": {
+            "defaults": {
+              "color": { "mode": "continuous-BlPu" },
+              "unit": "bytes",
+              "thresholds": {
+                "mode": "absolute",
+                "steps": [
+                  { "color": "green", "value": null },
+                  { "color": "yellow", "value": 536870912 },
+                  { "color": "red", "value": 1073741824 }
+                ]
+              }
+            },
+            "overrides": []
           },
           "gridPos": {
-            "h": 8,
-            "w": 11,
+            "h": 12,
+            "w": 24,
             "x": 0,
-            "y": 16
+            "y": 24
           },
-          "id": 4,
+          "id": 7,
           "options": {
-            "dedupStrategy": "none",
-            "enableLogDetails": true,
-            "prettifyLogMessage": false,
-            "showCommonLabels": false,
-            "showLabels": false,
-            "showTime": false,
-            "sortOrder": "Descending",
-            "wrapLogMessage": false
+            "displayMode": "gradient",
+            "orientation": "horizontal",
+            "reduceOptions": {
+              "calcs": ["max"],
+              "fields": "",
+              "values": false
+            },
+            "showUnfilled": true
           },
           "targets": [
             {
-              "datasource": {
-                "type": "loki",
-                "uid": "lokiuid"
-              },
-              "editorMode": "code",
-              "expr": "{app=\"dbt-rpc-prod\"}",
-              "queryType": "range",
+              "datasource": { "type": "prometheus", "uid": "prometheus" },
+              "expr": "avg by (label_prefect_io_deployment_name) (\n  max_over_time(\n    prefect_job_memory_bytes{namespace=\"prefect-worker-basedosdados\"}\n  [30d])\n)",
+              "instant": true,
+              "legendFormat": "{{label_prefect_io_deployment_name}}",
               "refId": "A"
             }
           ],
-          "title": "dbt production",
-          "type": "logs"
+          "title": "RAM por flow — Produção (últimos 30 dias)",
+          "type": "bargauge"
         },
         {
           "datasource": {
-            "type": "loki",
-            "uid": "lokiuid"
+            "type": "prometheus",
+            "uid": "prometheus"
+          },
+          "fieldConfig": {
+            "defaults": {
+              "color": { "mode": "continuous-GrYlRd" },
+              "unit": "bytes",
+              "thresholds": {
+                "mode": "absolute",
+                "steps": [
+                  { "color": "green", "value": null },
+                  { "color": "yellow", "value": 536870912 },
+                  { "color": "red", "value": 1073741824 }
+                ]
+              }
+            },
+            "overrides": []
           },
           "gridPos": {
-            "h": 8,
-            "w": 11,
-            "x": 11,
-            "y": 16
+            "h": 12,
+            "w": 24,
+            "x": 0,
+            "y": 36
           },
-          "id": 5,
+          "id": 8,
           "options": {
-            "dedupStrategy": "none",
-            "enableLogDetails": true,
-            "prettifyLogMessage": false,
-            "showCommonLabels": false,
-            "showLabels": false,
-            "showTime": false,
-            "sortOrder": "Descending",
-            "wrapLogMessage": false
+            "displayMode": "gradient",
+            "orientation": "horizontal",
+            "reduceOptions": {
+              "calcs": ["max"],
+              "fields": "",
+              "values": false
+            },
+            "showUnfilled": true
           },
           "targets": [
             {
-              "datasource": {
-                "type": "loki",
-                "uid": "lokiuid"
-              },
-              "editorMode": "code",
-              "expr": "{app=\"dbt-rpc-dev\"}",
-              "queryType": "range",
+              "datasource": { "type": "prometheus", "uid": "prometheus" },
+              "expr": "avg by (label_prefect_io_deployment_name) (\n  max_over_time(\n    prefect_job_memory_bytes{namespace=\"prefect-worker-basedosdados-dev\"}\n  [30d])\n)",
+              "instant": true,
+              "legendFormat": "{{label_prefect_io_deployment_name}}",
               "refId": "A"
             }
           ],
-          "title": "dbt development",
-          "type": "logs"
+          "title": "RAM por flow — Desenvolvimento (últimos 30 dias)",
+          "type": "bargauge"
         }
       ],
       "schemaVersion": 39,
@@ -770,7 +831,7 @@ data:
       "timezone": "browser",
       "title": "Base dos Dados / Pipelines",
       "uid": "cdlzb0owwly4gd",
-      "version": 2,
+      "version": 5,
       "weekStart": ""
     }
 ---

@@ -2,6 +2,9 @@ apiVersion: batch/v1
 kind: Job
 spec:
   template:
+    metadata:
+      labels:
+        deployment: "{{ deployment.name }}"
     spec:
       containers:
       - name: flow
