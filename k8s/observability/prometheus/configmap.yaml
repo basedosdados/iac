@@ -759,13 +759,13 @@ data:
           "targets": [
             {
               "datasource": { "type": "prometheus", "uid": "prometheus" },
-              "expr": "avg by (label_prefect_io_deployment_name) (\n  max_over_time(\n    prefect_job_memory_bytes{namespace=\"prefect-worker-basedosdados\"}\n  [30d])\n)",
+              "expr": "max by (label_prefect_io_deployment_name) (\n  max_over_time(\n    prefect_job_memory_bytes{namespace=\"prefect-worker-basedosdados\"}\n  [30d])\n)",
               "instant": true,
               "legendFormat": "{{label_prefect_io_deployment_name}}",
               "refId": "A"
             }
           ],
-          "title": "RAM por flow — Produção (últimos 30 dias)",
+          "title": "RAM por flow — Produção (pico máximo, últimos 30 dias)",
           "type": "bargauge"
         },
         {
@@ -808,13 +808,13 @@ data:
           "targets": [
             {
               "datasource": { "type": "prometheus", "uid": "prometheus" },
-              "expr": "avg by (label_prefect_io_deployment_name) (\n  max_over_time(\n    prefect_job_memory_bytes{namespace=\"prefect-worker-basedosdados-dev\"}\n  [30d])\n)",
+              "expr": "max by (label_prefect_io_deployment_name) (\n  max_over_time(\n    prefect_job_memory_bytes{namespace=\"prefect-worker-basedosdados-dev\"}\n  [30d])\n)",
               "instant": true,
               "legendFormat": "{{label_prefect_io_deployment_name}}",
               "refId": "A"
             }
           ],
-          "title": "RAM por flow — Desenvolvimento (últimos 30 dias)",
+          "title": "RAM por flow — Desenvolvimento (pico máximo, últimos 30 dias)",
           "type": "bargauge"
         }
       ],
