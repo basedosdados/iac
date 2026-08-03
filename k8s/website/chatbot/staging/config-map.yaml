@@ -10,8 +10,9 @@ data:
   DB_PORT: "5432"
   DB_USER: chatbot_staging
   ENVIRONMENT: staging
-  GOOGLE_BIGQUERY_PROJECT: basedosdados
+  GOOGLE_BILLING_PROJECT: basedosdados
   GOOGLE_SERVICE_ACCOUNT: /var/secrets/chatbot-sa.json
+  GOOGLE_GCS_BUCKET: basedosdados-chatbot-downloads-staging
   LANGSMITH_PROJECT: staging
   LANGSMITH_TRACING: "true"
   MODEL_TEMPERATURE: "0.0"
