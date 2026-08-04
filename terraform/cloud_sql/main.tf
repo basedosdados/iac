@@ -160,16 +160,6 @@ resource "google_sql_database" "metabase" {
   instance = google_sql_database_instance.main.name
 }
 
-resource "google_sql_user" "prefect" {
-  name     = var.sql_prefect_user_name
-  instance = google_sql_database_instance.main.name
-  password = var.sql_prefect_user_password
-}
-
-resource "google_sql_database" "prefect" {
-  name     = var.sql_prefect_db_name
-  instance = google_sql_database_instance.main.name
-}
 
 resource "random_password" "prefect3_db_password" {
   length           = 22
