@@ -12,7 +12,7 @@ data:
   ENVIRONMENT: staging
   GOOGLE_BILLING_PROJECT: basedosdados
   GOOGLE_SERVICE_ACCOUNT: /var/secrets/chatbot-sa.json
-  GOOGLE_GCS_BUCKET: basedosdados-chatbot-downloads-staging
+  GOOGLE_GCS_BUCKET: chatbot-downloads-staging
   LANGSMITH_PROJECT: staging
   LANGSMITH_TRACING: "true"
   MODEL_TEMPERATURE: "0.0"
