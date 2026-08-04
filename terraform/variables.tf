@@ -110,24 +110,6 @@ variable "sql_metabase_db_name" {
   default     = "metabase"
 }
 
-variable "sql_prefect_user_name" {
-  type        = string
-  description = "The name of the Prefect database user."
-  default     = "prefect"
-}
-
-variable "sql_prefect_user_password" {
-  type        = string
-  description = "The password of the Prefect database user."
-  sensitive   = true
-}
-
-variable "sql_prefect_db_name" {
-  type        = string
-  description = "The name of the Prefect database."
-  default     = "prefect"
-}
-
 variable "sql_prefect3_user_name" {
   type        = string
   description = "The name of the Prefect 3 database user."
