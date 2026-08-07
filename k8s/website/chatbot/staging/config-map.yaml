@@ -15,6 +15,5 @@ data:
   GOOGLE_GCS_BUCKET: chatbot-downloads-staging
   LANGSMITH_PROJECT: staging
   LANGSMITH_TRACING: "true"
-  MODEL_TEMPERATURE: "0.0"
-  MODEL_URI: google_genai:gemini-3-flash-preview
-  THINKING_LEVEL: low
+  MODEL_URI: gpt-5.6-luna
+  REASONING_EFFORT: medium
