@@ -52,10 +52,11 @@ time, and the controller keeps whichever was applied last — so **the
 highest-numbered file for a given Secret name is the live one**, and the lower
 ones are dead history nobody has deleted.
 
-`k8s/website/django/prod/` has nine files, all `api-prod-secrets`; only
-`secret-09_sealed.yaml` is live. Editing `secret-04_sealed.yaml` would change
-nothing and look like it should. Run `make lint-secrets` — it prints the live
-file for every Secret that has more than one snapshot.
+`k8s/website/django/prod/` holds ten sealed files. Nine declare
+`api-prod-secrets`, of which only `secret-09_sealed.yaml` is live; the tenth is
+an unrelated Secret. Editing `secret-04_sealed.yaml` would change nothing and
+look like it should. Run `make lint-secrets` — it prints the live file for
+every Secret that has more than one snapshot.
 
 Two ways to change a Secret, both used in the history:
 
