@@ -8,6 +8,8 @@ ENV/
 env.bak/
 venv.bak/
 .DS_Store
+__pycache__/
+uv.lock
 
 # k8s
 secret.yaml
@@ -15,3 +17,6 @@ secrets.yaml
 secret-[0-9][0-9].yaml
 encryption.key
 *.json
+
+# Claude Code: skills are shared, scratch worktrees are not
+.claude/worktrees/
