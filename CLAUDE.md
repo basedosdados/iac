@@ -74,7 +74,10 @@ number, which is how `vault-credentials` came to sit at `secret-03` alongside
 - Keys inside `encryptedData` are sorted alphabetically. Roughly half the
   repository predates this; `make lint-secrets` reports drift as a warning
   rather than an error, so old files are not a standing failure.
-- Files should start with `---` and carry no `creationTimestamp`.
+- No leading `---`, and no `creationTimestamp`. The `---` is not a style
+  preference: `pretty-format-yaml` strips it, so a file committed with one
+  comes back modified. The older files under `k8s/prefect_workers/` still have
+  theirs only because the hook has not touched them since.
 - Plaintext `secret-NN.yaml` is gitignored. Prefer never creating one — the
   commands below stream plaintext through a pipe and never write it to disk.
 

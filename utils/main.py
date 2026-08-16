@@ -153,15 +153,14 @@ def secret_manifest(name: str, namespace: str, values: Dict[str, str]) -> str:
 
 def tidy(sealed: str) -> str:
     """
-    Normalizes kubeseal output to the convention used across k8s/: a leading
-    document marker and no null creationTimestamp noise.
+    Strips the null creationTimestamp that kubeseal emits. Deliberately does
+    not add a leading '---': the pretty-format-yaml pre-commit hook removes it
+    again, so adding one only produces a spurious diff at commit time.
     """
     kept = [
         line for line in sealed.splitlines()
         if line.strip() != "creationTimestamp: null"
     ]
-    if not kept or kept[0].strip() != "---":
-        kept.insert(0, "---")
     return "\n".join(kept) + "\n"
 
 
@@ -352,8 +351,10 @@ def lint_secrets(root: str = "k8s", strict: bool = False):
 
             if manifest["keys"] != sorted(manifest["keys"]):
                 warnings.append(f"{path}: encryptedData keys are not sorted")
-            if not manifest["leads_with_marker"]:
-                warnings.append(f"{path}: does not start with '---'")
+            if manifest["leads_with_marker"]:
+                warnings.append(
+                    f"{path}: leading '---' will be stripped by "
+                    f"pretty-format-yaml on the next commit that touches it")
 
             if manifest["name"]:
                 snapshots.setdefault(manifest["name"], []).append(path)
