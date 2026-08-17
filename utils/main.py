@@ -9,10 +9,13 @@ import string
 
 app = typer.Typer()
 
-# Certificado público do controlador sealed-secrets. Não é sensível: serve
-# apenas para cifrar. Uma vez versionado, `seal-secret` e `seal-value` rodam
-# offline, sem acesso ao cluster.
-SEALING_CERT = Path("k8s/sealed-secrets/pub-cert.pem")
+# Certificado público do controlador sealed-secrets, obtido sob demanda por
+# `fetch-sealing-cert`. Deliberadamente fora do versionamento (ver .gitignore):
+# este repositório é público, e o diff de um SealedSecret é ilegível por
+# construção. Enquanto o certificado exigir acesso ao cluster, quem consegue
+# cifrar um segredo é exatamente quem já tem acesso para aplicá-lo. Publicá-lo
+# quebraria essa correspondência.
+SEALING_CERT = Path(".sealed-secrets-cert.pem")
 
 
 def command_exists(command: str) -> bool:

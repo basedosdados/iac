@@ -111,19 +111,34 @@ This rewrites one line, which is what a well-scoped secret commit looks like —
 see `6be5d07`. `VALUE=` works too but lands in shell history; prefer
 `VALUEFILE=`.
 
-### Sealing without cluster access
+### Sealing requires cluster access, on purpose
 
-`kubeseal` needs the controller's public certificate. By default it fetches it
-from the current `kubectl` context, which requires a live `gcloud` login. Fetch
-it once and the repository can seal offline afterwards:
+`kubeseal` encrypts with the controller's public certificate, which it fetches
+from the current `kubectl` context — so sealing needs a live `gcloud auth
+login`. That is a deliberate control, not friction to be engineered away.
+
+The certificate is encrypt-only and therefore not confidential; Bitnami
+documents publishing it as safe. The reason it stays out of this repository is
+different. **This repository is public, and a SealedSecret diff is unreviewable
+by construction** — ciphertext in, ciphertext out. While producing valid
+ciphertext requires cluster access, the set of people who can author a secret
+is exactly the set already trusted to apply one. Committing the certificate
+would break that correspondence and let anyone open a PR sealing an arbitrary
+value into, say, `vault-credentials`, with nothing visible in review.
+
+So: do not commit `.sealed-secrets-cert.pem`, and do not add a CI job that
+seals. Review a secret PR by who wrote it and what they say it contains, then
+confirm against the cluster after applying.
+
+If you would rather not re-authenticate for every seal, cache the certificate
+locally — it is gitignored, and fetching it still requires cluster access:
 
 ```bash
-make fetch-sealing-cert   # writes k8s/sealed-secrets/pub-cert.pem
+make fetch-sealing-cert   # writes .sealed-secrets-cert.pem, git-ignored
 ```
 
-The certificate is public key material and safe to commit. When
-`k8s/sealed-secrets/pub-cert.pem` exists, `seal-secret` and `seal-value` use it
-and skip the cluster entirely. Re-fetch it if the controller's key is rotated.
+When that file exists, `seal-secret` and `seal-value` use it and skip the
+cluster. Delete it and re-fetch if the controller's key is rotated.
 
 ### Applying
 

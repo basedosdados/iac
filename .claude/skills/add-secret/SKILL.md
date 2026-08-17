@@ -33,19 +33,20 @@ Prefect worker namespaces are `gcp-credentials` and `vault-credentials`.
 ## 2. Check you can seal
 
 ```bash
-test -f k8s/sealed-secrets/pub-cert.pem && echo "offline sealing available"
+test -f .sealed-secrets-cert.pem && echo "cached cert, no cluster needed"
+kubectl get ns >/dev/null 2>&1 && echo "cluster reachable"
 ```
 
-If the certificate is absent, sealing needs a live cluster connection:
+One of those must succeed. If neither does, stop and ask the user to run
+`gcloud auth login` — it cannot be done non-interactively.
 
-```bash
-kubectl get ns >/dev/null && echo "cluster reachable"
-```
-
-If that fails with a reauth error, stop and ask the user to run `gcloud auth
-login` — it cannot be done non-interactively. Then suggest `make
-fetch-sealing-cert`, which caches the public certificate so this never blocks
-again.
+Sealing deliberately requires cluster access. Never commit
+`.sealed-secrets-cert.pem` (it is gitignored), never add a CI job that seals,
+and do not suggest either as a convenience: this repository is public and a
+SealedSecret diff is unreviewable, so requiring cluster access is what keeps
+secret authorship limited to people already trusted to apply one. `make
+fetch-sealing-cert` caches it locally, which is fine — fetching still needs
+cluster access.
 
 ## 3. Seal
 
