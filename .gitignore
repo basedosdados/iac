@@ -8,6 +8,8 @@ ENV/
 env.bak/
 venv.bak/
 .DS_Store
+__pycache__/
+uv.lock
 
 # k8s
 secret.yaml
@@ -15,3 +17,13 @@ secrets.yaml
 secret-[0-9][0-9].yaml
 encryption.key
 *.json
+
+# Sealed-secrets public certificate. Encrypt-only, so not confidential, but
+# kept out of this public repo on purpose: needing cluster access to seal is
+# what keeps "can author a secret" aligned with "can already apply one", and a
+# SealedSecret diff cannot be reviewed on sight. Fetch it per machine with
+# `make fetch-sealing-cert`.
+.sealed-secrets-cert.pem
+
+# Claude Code: skills are shared, scratch worktrees are not
+.claude/worktrees/
