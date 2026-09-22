@@ -17,6 +17,21 @@ variable "zone" {
 }
 
 ############################################################################
+# Compute Proxy (IP brasileiro — iac#155)
+############################################################################
+variable "brasil_proxy_region" {
+  type        = string
+  description = "GCP region for the Brazil-IP proxy VM."
+  default     = "southamerica-east1"
+}
+
+variable "brasil_proxy_zone" {
+  type        = string
+  description = "GCP zone for the Brazil-IP proxy VM."
+  default     = "southamerica-east1-a"
+}
+
+############################################################################
 # Cloud SQL
 ############################################################################
 variable "sql_version" {

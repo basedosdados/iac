@@ -83,6 +83,13 @@ module "gke" {
   dynamic_pool_node_preemptible = var.dynamic_pool_node_preemptible
 }
 
+module "brasil_proxy" {
+  source     = "./brasil_proxy"
+  project_id = var.project_id
+  region     = var.brasil_proxy_region
+  zone       = var.brasil_proxy_zone
+}
+
 module "iam" {
   source                          = "./iam"
   project_id                      = var.project_id
