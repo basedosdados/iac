@@ -8,13 +8,16 @@ resource "google_service_account" "gsa-brasil-proxy" {
 
 # ...........................................................................
 # Credencial do proxy (usuário fixo, senha aleatória) — mesmo padrão do
-# módulo cloud_sql: random_password + Secret Manager.
+# módulo cloud_sql: random_password + Secret Manager. Sem caracteres
+# especiais: a senha vai embutida numa URL (http://user:senha@host:porta),
+# e caracteres como [ ] : @ quebram o parser de URL do Python
+# ("Invalid IPv6 URL") — 24 caracteres alfanuméricos já dão entropia de
+# sobra sem esse risco.
 # https://registry.terraform.io/providers/hashicorp/random/latest/docs/resources/password
 # ...........................................................................
 resource "random_password" "brasil_proxy_password" {
-  length           = 24
-  special          = true
-  override_special = "!#$%&*()-_=+[]{}<>:?"
+  length  = 24
+  special = false
 }
 
 resource "google_secret_manager_secret" "brasil_proxy_password" {
