@@ -7,7 +7,27 @@ fullnameOverride: "prefect-server"
 global:
   prefect:
     image:
-      prefectTag: "3-latest"
+      # Imagem customizada, não prefecthq/prefect — necessário pro fix do
+      # SQLAlchemy abaixo. Dockerfile em ../image/Dockerfile.
+      #
+      # NÃO usar 3.8.6 nem qualquer versão anterior a 3.8.7 como base: o
+      # banco já foi migrado pelo Alembic pro schema da 3.8.7 — rodar uma
+      # versão mais antiga falha com "Can't locate revision identified by
+      # '<hash>'" (confirmado 2026-10-05, CrashLoopBackOff). Downgrade de
+      # schema não é seguro aqui.
+      #
+      # Base prefecthq/prefect:3.8.7-python3.12 tem o bug do scheduler:
+      # SQLAlchemy 2.1.0 (lançado 2026-09-24) quebra bulk insert de flow
+      # runs com "Can't evaluate bulk DML statement; please supply a
+      # bulk_dml decorated function" (PrefectHQ/prefect#23199, nenhuma
+      # release estável tem o fix ainda). EXTRA_PIP_PACKAGES na
+      # inicialização não funciona (filesystem somente leitura, falha ao
+      # remover o pacote antigo) — por isso esta imagem faz
+      # `pip install "sqlalchemy<2.1"` em build-time, não runtime.
+      # Reavaliar (voltar pra prefecthq/prefect oficial) quando alguma
+      # versão >= 3.8.8 estável sair com o fix mergeado.
+      repository: gcr.io/basedosdados-dev/prefect-server-sqlalchemy-fix
+      prefectTag: "3.8.7-sqlalchemy2.0"
       pullPolicy: IfNotPresent
 
 server:
@@ -19,13 +39,18 @@ server:
 
   loggingLevel: WARNING
 
+  # 256Mi causava OOMKill recorrente (confirmado 2026-10-05: pod criado em
+  # 02/10, 3 restarts por OOMKilled) com ~775 deployments registrados — o
+  # scheduler parava de gerar novas runs depois de cada crash, sem repor o
+  # buffer de runs futuras. 512Mi/1Gi dá margem real pro volume atual e
+  # crescimento próximo.
   resources:
     requests:
       cpu: 100m
-      memory: 128Mi
+      memory: 512Mi
     limits:
       cpu: 500m
-      memory: 256Mi
+      memory: 1Gi
 
 serviceAccount:
   create: true
