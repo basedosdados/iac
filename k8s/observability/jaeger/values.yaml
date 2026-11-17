@@ -1,0 +1,32 @@
+# helm upgrade -i -n observability -f values.yaml --version <VERSAO_FIXADA> jaeger jaegertracing/jaeger
+#
+# Jaeger v2 all-in-one, sem storage persistente nesta fase (storage
+# "memory", efêmero, limitado a max_traces: 100000 — valor embutido na
+# config padrão da imagem). Sem `userconfig`: a config embutida já expõe
+# OTLP gRPC/HTTP em 0.0.0.0:4317/4318 e a UI de query na porta 16686.
+# Decidir sobre storage persistente é um passo futuro, fora de escopo
+# aqui — ver ftwca/investigacoes/backend/plano-migracao-jaeger-2026-11-17.md.
+#
+# Sem Ingress por enquanto (ingress.enabled: false) — acesso só via
+# `kubectl port-forward svc/jaeger -n observability 16686:16686`.
+jaeger:
+  replicas: 1
+
+  # Dimensionamento: mesmo no pico ruim já visto (100% de amostragem,
+  # ~340 mil spans/hora ≈ 94 spans/s), é volume modesto pra um coletor
+  # que só faz lote + guarda em memória. `requests` é o que reserva de
+  # verdade no nó; `limits` é só o teto. Ajustar com `kubectl top pod`
+  # se a observação real pedir mais.
+  resources:
+    requests:
+      cpu: 100m
+      memory: 128Mi
+    limits:
+      cpu: 500m
+      memory: 512Mi
+
+  ingress:
+    enabled: false
+
+  service:
+    type: ClusterIP
