@@ -1149,6 +1149,36 @@ grafana:
   ## adaptador de formato de webhook.
   ## ref: https://grafana.com/docs/grafana/latest/alerting/set-up/provision-alerting-resources/file-provisioning/
   alerting:
+    ## Template de notificação reutilizável (Grafana "notification templates",
+    ## provisionado como código — https://grafana.com/docs/grafana/latest/alerting/configure-notifications/template-notifications/).
+    ## Centraliza o texto da mensagem aqui; qualquer contact point referencia
+    ## pelo nome (`{{ template "alerta_cpu_discord" . }}`), em vez de ter o
+    ## texto inteiro hardcoded dentro de `contactpoints.yaml`.
+    ##
+    ## Mesma técnica de escape do `contactpoints.yaml` abaixo: o chart passa
+    ## `grafana.alerting` inteiro por `tpl()` do Helm antes de virar
+    ## ConfigMap/Secret, então qualquer `{{ }}` que deveria ser interpretado
+    ## pelo Grafana (não pelo Helm) precisa estar dentro de um único literal
+    ## de string crua do Go (`{{ \`...\` }}`).
+    templates.yaml:
+      apiVersion: 1
+      templates:
+      - orgId: 1
+        name: alerta_cpu_discord
+        template: |
+          {{ `{{ define "alerta_cpu_discord" }}
+          <@&1569766403245084783>
+
+          {{ range .Alerts }}
+          **{{ .Status }}** — CPU: {{ .Values.B }} núcleos (limite é 1)
+
+          {{ .Annotations.summary }}
+
+          🔗 [Ver no Grafana]({{ .GeneratorURL }}) · 🔕 [Silenciar]({{ .SilenceURL }})
+          {{ end }}
+          {{ end }}
+          ` }}
+
     contactpoints.yaml:
       apiVersion: 1
       contactPoints:
@@ -1161,17 +1191,14 @@ grafana:
             url: $DISCORD_WEBHOOK_URL
             use_discord_username: true
             title: 'api-prod: CPU alta'
+            ## Antes: mensagem inteira hardcoded aqui, usando `{{ .ValueString }}`
+            ## — que, como a regra (`rules.yaml`) tem 3 refIds encadeados
+            ## (A/B/C: query/reduce/threshold), virava o dump de depuração
+            ## "[ var='A' ... ], [ var='B' ... ], [ var='C' ... ]" em vez de um
+            ## número limpo. `{{ .Values.B }}` pega só o valor já reduzido
+            ## (idêntico ao de A, só que resolvido a um único número).
             message: |
-              {{ `<@&865034571469160458>
-
-              {{ range .Alerts }}
-              **{{ .Status }}** — CPU: {{ .ValueString }} núcleos (limite é 1)
-
-              {{ .Annotations.summary }}
-
-              🔗 [Ver no Grafana]({{ .GeneratorURL }}) · 🔕 [Silenciar]({{ .SilenceURL }})
-              {{ end }}
-              ` }}
+              {{ `{{ template "alerta_cpu_discord" . }}` }}
 
     policies.yaml:
       apiVersion: 1
