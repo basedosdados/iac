@@ -1,0 +1,311 @@
+{
+  "panels": [
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "prometheus"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "unit": "reqps"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 0,
+        "y": 0
+      },
+      "id": 1,
+      "targets": [
+        {
+          "expr": "sum(rate(otelcol_receiver_accepted_spans{job=\"jaeger\"}[5m]))",
+          "legendFormat": "aceito na entrada",
+          "refId": "A"
+        },
+        {
+          "expr": "sum(rate(otelcol_exporter_sent_spans{job=\"jaeger\"}[5m]))",
+          "legendFormat": "gravado no storage",
+          "refId": "B"
+        },
+        {
+          "expr": "sum(rate(otelcol_receiver_refused_spans{job=\"jaeger\"}[5m]))",
+          "legendFormat": "recusado na entrada",
+          "refId": "C"
+        }
+      ],
+      "title": "Spans aceitos vs gravados (gap = recusado)",
+      "type": "timeseries"
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "prometheus"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "unit": "bytes"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 12,
+        "y": 0
+      },
+      "id": 2,
+      "targets": [
+        {
+          "expr": "otelcol_exporter_queue_size{job=\"jaeger\"}",
+          "legendFormat": "ocupação atual",
+          "refId": "A"
+        },
+        {
+          "expr": "otelcol_exporter_queue_capacity{job=\"jaeger\"}",
+          "legendFormat": "capacidade (teto)",
+          "refId": "B"
+        }
+      ],
+      "title": "Fila do exportador (jaeger_storage_exporter)",
+      "type": "timeseries"
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "prometheus"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "custom": {
+            "thresholdsStyle": {
+              "mode": "line"
+            }
+          },
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "orange",
+                "value": 398458880
+              },
+              {
+                "color": "red",
+                "value": 536870912
+              }
+            ]
+          },
+          "unit": "bytes"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 0,
+        "y": 8
+      },
+      "id": 3,
+      "targets": [
+        {
+          "expr": "otelcol_process_memory_rss{job=\"jaeger\"}",
+          "legendFormat": "RSS real",
+          "refId": "A"
+        }
+      ],
+      "title": "Memória do processo (RSS) vs limit_mib (380Mi) e hard limit (512Mi)",
+      "type": "timeseries"
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "prometheus"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 1
+              }
+            ]
+          },
+          "unit": "short"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 4,
+        "w": 6,
+        "x": 12,
+        "y": 8
+      },
+      "id": 4,
+      "targets": [
+        {
+          "expr": "sum(increase(otelcol_exporter_enqueue_failed_spans{job=\"jaeger\"}[1h])) or vector(0)",
+          "legendFormat": "última 1h",
+          "refId": "A"
+        }
+      ],
+      "title": "Spans perdidos por fila cheia (enqueue_failed)",
+      "type": "stat"
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "prometheus"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "orange",
+                "value": 1
+              }
+            ]
+          },
+          "unit": "short"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 4,
+        "w": 6,
+        "x": 18,
+        "y": 8
+      },
+      "id": 5,
+      "targets": [
+        {
+          "expr": "sum(increase(otelcol_receiver_refused_spans{job=\"jaeger\"}[1h]))",
+          "legendFormat": "última 1h",
+          "refId": "A"
+        }
+      ],
+      "title": "Spans recusados pelo memory_limiter (pressão real de memória)",
+      "type": "stat"
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "prometheus"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 1
+              }
+            ]
+          },
+          "unit": "short"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 4,
+        "w": 12,
+        "x": 12,
+        "y": 12
+      },
+      "id": 6,
+      "targets": [
+        {
+          "expr": "max(kube_pod_container_status_restarts_total{namespace=\"observability\", container=\"jaeger\"})",
+          "legendFormat": "restarts",
+          "refId": "A"
+        }
+      ],
+      "title": "Restarts do pod",
+      "type": "stat"
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "prometheus"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "custom": {
+            "thresholdsStyle": {
+              "mode": "line+area"
+            }
+          },
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "orange",
+                "value": 1500
+              },
+              {
+                "color": "red",
+                "value": 3000
+              }
+            ]
+          },
+          "unit": "reqps"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 9,
+        "w": 24,
+        "x": 0,
+        "y": 16
+      },
+      "id": 7,
+      "targets": [
+        {
+          "expr": "sum(rate(otelcol_receiver_accepted_spans{job=\"jaeger\"}[1m]))",
+          "legendFormat": "spans/s (média 1min)",
+          "refId": "A"
+        }
+      ],
+      "title": "Spans/s recebidos (acompanhar picos)",
+      "type": "timeseries"
+    }
+  ],
+  "refresh": "30s",
+  "schemaVersion": 39,
+  "tags": [
+    "jaeger",
+    "observabilidade"
+  ],
+  "time": {
+    "from": "now-24h",
+    "to": "now"
+  },
+  "timezone": "browser",
+  "title": "Jaeger - memory_limiter e fila do exportador",
+  "uid": "jaeger-memory-badger"
+}
