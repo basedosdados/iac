@@ -1,11 +1,22 @@
 # helm upgrade -i -n observability -f values.yaml --version <VERSAO_FIXADA> jaeger jaegertracing/jaeger
 #
-# Jaeger v2 all-in-one, sem storage persistente nesta fase (storage
-# "memory", efêmero, limitado a max_traces: 100000 — valor embutido na
-# config padrão da imagem). Sem `userconfig`: a config embutida já expõe
-# OTLP gRPC/HTTP em 0.0.0.0:4317/4318 e a UI de query na porta 16686.
-# Decidir sobre storage persistente é um passo futuro, fora de escopo
-# aqui — ver ftwca/investigacoes/backend/plano-migracao-jaeger-2026-11-17.md.
+# Jaeger v2 all-in-one, sem storage persistente em disco (storage
+# "memory", efêmero, limitado a max_traces: 100000). Decidimos não usar
+# disco (Badger vazava índice sem limite, Elasticsearch/ClickHouse/
+# Cassandra pesados demais pra RAM do cluster) — ver
+# ftwca/investigacoes/backend/problema-storage-jaeger-2026-11-19.md.
+#
+# Em vez disso, o `userconfig` abaixo configura o próprio pipeline do
+# Jaeger pra se proteger de picos de volume (ex. N+1 do Haystack,
+# backend#1150/#1145) sem OOM e sem perda silenciosa: `memory_limiter`
+# recusa admissão quando a memória real aperta (antes do hard limit do
+# container), e a fila do exportador é dimensionada em bytes (não
+# itens) grande o bastante pra não ser ela mesma um teto artificial.
+# Validado localmente via Docker (rajadas de até 500 mil spans, carga
+# sustentada até 3.000 spans/s) e contra o tráfego real de produção
+# (~9-94 spans/s, bem abaixo do ponto de virada de ~1.500-3.000 spans/s
+# sustentados) — processo completo documentado em
+# ftwca/investigacoes/backend/solucao-oom-jaeger-memory-limiter-2026-11-19.md.
 #
 # Sem Ingress por enquanto (ingress.enabled: false) — acesso só via
 # `kubectl port-forward svc/jaeger -n observability 16686:16686`.
@@ -15,8 +26,9 @@ jaeger:
   # Dimensionamento: mesmo no pico ruim já visto (100% de amostragem,
   # ~340 mil spans/hora ≈ 94 spans/s), é volume modesto pra um coletor
   # que só faz lote + guarda em memória. `requests` é o que reserva de
-  # verdade no nó; `limits` é só o teto. Ajustar com `kubectl top pod`
-  # se a observação real pedir mais.
+  # verdade no nó; `limits` é só o teto — testado localmente com esse
+  # mesmo teto de 512Mi, `memory_limiter` calibrado pra não chegar perto
+  # dele. Ajustar com `kubectl top pod` se a observação real pedir mais.
   resources:
     requests:
       cpu: 100m
@@ -30,3 +42,82 @@ jaeger:
 
   service:
     type: ClusterIP
+    # A porta de métricas internas do coletor (telemetry.metrics no
+    # userconfig abaixo) já vem exposta por padrão pelo chart como
+    # "internal-metrics" (8888) — usada pelo ServiceMonitor
+    # (servicemonitor.yaml) pra raspar.
+
+# Sobrescreve por completo a config interna do Jaeger (não é merge).
+# Baseado no config-badger.yaml oficial, adaptado: sem storage em
+# disco, com memory_limiter + fila do exportador calibrados (ver doc
+# citada acima pro porquê de cada valor).
+userconfig:
+  service:
+    extensions: [jaeger_storage, jaeger_query, healthcheckv2]
+    pipelines:
+      traces:
+        receivers: [otlp]
+        processors: [memory_limiter, batch]
+        exporters: [jaeger_storage_exporter]
+    telemetry:
+      resource:
+        service.name: jaeger
+      metrics:
+        level: detailed
+        readers:
+        - pull:
+            exporter:
+              prometheus:
+                host: 0.0.0.0
+                port: 8888
+      logs:
+        level: info
+
+  extensions:
+    # `http:` sem endpoint explícito escuta só em 127.0.0.1 nesse
+    # componente — readiness/liveness probe do Kubernetes bate via IP
+    # do pod, não localhost (bug já encontrado antes, ver doc).
+    healthcheckv2:
+      use_v2: true
+      http:
+        endpoint: 0.0.0.0:13133
+    jaeger_query:
+      storage:
+        traces: some_store
+      # Sem `ui.config_file` — o path do exemplo oficial só existe no
+      # repo fonte clonado, não na imagem Docker publicada (bug já
+      # encontrado antes, ver doc).
+    jaeger_storage:
+      backends:
+        some_store:
+          memory:
+            max_traces: 100000
+
+  receivers:
+    otlp:
+      protocols:
+        grpc:
+          endpoint: 0.0.0.0:4317
+        http:
+          endpoint: 0.0.0.0:4318
+
+  processors:
+    memory_limiter:
+      check_interval: 100ms
+      limit_mib: 380
+      spike_limit_mib: 100
+    batch:
+
+  exporters:
+    jaeger_storage_exporter:
+      trace_storage: some_store
+      queue:
+        enabled: true
+        sizer: bytes
+        num_consumers: 4
+        queue_size: 50000000
+        # false, não o default real (true): nunca deixar a fila cheia
+        # bloquear a resposta HTTP de volta pro sidecar otel-collector
+        # do backend — prefere perder o span a atrasar a aplicação real.
+        block_on_overflow: false
+        wait_for_result: false

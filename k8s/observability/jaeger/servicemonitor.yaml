@@ -1,0 +1,27 @@
+# Manifesto avulso (kubectl apply, não faz parte do helm release do
+# jaeger) — faz o Prometheus Operator já instalado no cluster
+# (prometheus-kube-prometheus-operator, namespace observability)
+# raspar as métricas internas do coletor (memory_limiter, fila do
+# exportador etc.) na porta "internal-metrics" (8888), já exposta por
+# padrão pelo chart. O operador só observa ServiceMonitor com o label
+# `release: prometheus` (confirmado via
+# `kubectl get prometheus -o yaml` -> serviceMonitorSelector).
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: jaeger
+  namespace: observability
+  labels:
+    release: prometheus
+spec:
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: jaeger
+      app.kubernetes.io/instance: jaeger
+  namespaceSelector:
+    matchNames:
+    - observability
+  endpoints:
+  - port: internal-metrics
+    path: /metrics
+    interval: 30s
