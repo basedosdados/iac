@@ -1,34 +1,15 @@
 # helm upgrade -i -n observability -f values.yaml --version <VERSAO_FIXADA> jaeger jaegertracing/jaeger
 #
-# Jaeger v2 all-in-one, sem storage persistente em disco (storage
-# "memory", efêmero, limitado a max_traces: 100000). Decidimos não usar
-# disco (Badger vazava índice sem limite, Elasticsearch/ClickHouse/
-# Cassandra pesados demais pra RAM do cluster) — ver
-# ftwca/investigacoes/backend/problema-storage-jaeger-2026-11-19.md.
-#
-# Em vez disso, o `userconfig` abaixo configura o próprio pipeline do
-# Jaeger pra se proteger de picos de volume (ex. N+1 do Haystack,
-# backend#1150/#1145) sem OOM e sem perda silenciosa: `memory_limiter`
-# recusa admissão quando a memória real aperta (antes do hard limit do
-# container), e a fila do exportador é dimensionada em bytes (não
-# itens) grande o bastante pra não ser ela mesma um teto artificial.
-# Validado localmente via Docker (rajadas de até 500 mil spans, carga
-# sustentada até 3.000 spans/s) e contra o tráfego real de produção
-# (~9-94 spans/s, bem abaixo do ponto de virada de ~1.500-3.000 spans/s
-# sustentados) — processo completo documentado em
-# ftwca/investigacoes/backend/solucao-oom-jaeger-memory-limiter-2026-11-19.md.
+# Jaeger v2 all-in-one, storage Badger (disco persistente). Aplicar
+# pvc.yaml ANTES do helm upgrade: kubectl apply -f pvc.yaml.
 #
 # Sem Ingress por enquanto (ingress.enabled: false) — acesso só via
 # `kubectl port-forward svc/jaeger -n observability 16686:16686`.
 jaeger:
   replicas: 1
 
-  # Dimensionamento: mesmo no pico ruim já visto (100% de amostragem,
-  # ~340 mil spans/hora ≈ 94 spans/s), é volume modesto pra um coletor
-  # que só faz lote + guarda em memória. `requests` é o que reserva de
-  # verdade no nó; `limits` é só o teto — testado localmente com esse
-  # mesmo teto de 512Mi, `memory_limiter` calibrado pra não chegar perto
-  # dele. Ajustar com `kubectl top pod` se a observação real pedir mais.
+  # `requests` é o que reserva de verdade no nó; `limits` é só o teto —
+  # `memory_limiter` abaixo é calibrado pra não chegar perto dele.
   resources:
     requests:
       cpu: 100m
@@ -42,15 +23,20 @@ jaeger:
 
   service:
     type: ClusterIP
-    # A porta de métricas internas do coletor (telemetry.metrics no
-    # userconfig abaixo) já vem exposta por padrão pelo chart como
-    # "internal-metrics" (8888) — usada pelo ServiceMonitor
-    # (servicemonitor.yaml) pra raspar.
+    # Porta de métricas internas do coletor (telemetry.metrics no
+    # userconfig abaixo) já exposta por padrão pelo chart como
+    # "internal-metrics" (8888) — raspada pelo servicemonitor.yaml.
+
+  extraVolumes:
+  - name: badger-storage
+    persistentVolumeClaim:
+      claimName: jaeger-badger-storage
+
+  extraVolumeMounts:
+  - name: badger-storage
+    mountPath: /badger
 
 # Sobrescreve por completo a config interna do Jaeger (não é merge).
-# Baseado no config-badger.yaml oficial, adaptado: sem storage em
-# disco, com memory_limiter + fila do exportador calibrados (ver doc
-# citada acima pro porquê de cada valor).
 userconfig:
   service:
     extensions: [jaeger_storage, jaeger_query, healthcheckv2]
@@ -76,7 +62,7 @@ userconfig:
   extensions:
     # `http:` sem endpoint explícito escuta só em 127.0.0.1 nesse
     # componente — readiness/liveness probe do Kubernetes bate via IP
-    # do pod, não localhost (bug já encontrado antes, ver doc).
+    # do pod, não localhost.
     healthcheckv2:
       use_v2: true
       http:
@@ -85,13 +71,18 @@ userconfig:
       storage:
         traces: some_store
       # Sem `ui.config_file` — o path do exemplo oficial só existe no
-      # repo fonte clonado, não na imagem Docker publicada (bug já
-      # encontrado antes, ver doc).
+      # repo fonte clonado, não na imagem Docker publicada.
     jaeger_storage:
       backends:
         some_store:
-          memory:
-            max_traces: 100000
+          badger:
+            directories:
+              keys: /badger/keys
+              values: /badger/values
+            ephemeral: false
+            ttl:
+              spans: 72h
+            maintenance_interval: 10m
 
   receivers:
     otlp:
