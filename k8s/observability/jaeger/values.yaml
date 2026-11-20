@@ -95,8 +95,8 @@ userconfig:
   processors:
     memory_limiter:
       check_interval: 100ms
-      limit_mib: 380
-      spike_limit_mib: 100
+      limit_mib: 300
+      spike_limit_mib: 80
     batch:
 
   exporters:
