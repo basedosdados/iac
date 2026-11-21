@@ -8,6 +8,15 @@
 jaeger:
   replicas: 1
 
+  # Imagem oficial, sem patch — voltando a testar depois do fix do N+1 no
+  # backend (reduz drasticamente o volume real de spans que o disco
+  # precisa guardar). Imagem com patch de 1 linha (IndexCacheSize: 64MB)
+  # fica guardada em gcr.io/basedosdados-dev/jaeger:2.22.0-indexcache64mb
+  # como opção, caso o platô de RAM não se sustente sem ela de novo.
+  image:
+    repository: jaegertracing/jaeger
+    tag: 2.22.0
+
   # `requests` é o que reserva de verdade no nó; `limits` é só o teto —
   # `memory_limiter` abaixo é calibrado pra não chegar perto dele.
   resources:
