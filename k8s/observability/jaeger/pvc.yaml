@@ -1,0 +1,15 @@
+# Manifesto avulso (kubectl apply, não faz parte do helm release do
+# jaeger) — disco persistente pro storage Badger. 50Gi, custo estimado
+# ~$2/mês (storageClassName: standard).
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: jaeger-badger-storage
+  namespace: observability
+spec:
+  accessModes:
+  - ReadWriteOnce
+  storageClassName: standard
+  resources:
+    requests:
+      storage: 50Gi

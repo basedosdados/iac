@@ -1,0 +1,123 @@
+# helm upgrade -i -n observability -f values.yaml --version <VERSAO_FIXADA> jaeger jaegertracing/jaeger
+#
+# Jaeger v2 all-in-one, storage Badger (disco persistente). Aplicar
+# pvc.yaml ANTES do helm upgrade: kubectl apply -f pvc.yaml.
+#
+# Sem Ingress por enquanto (ingress.enabled: false) — acesso só via
+# `kubectl port-forward svc/jaeger -n observability 16686:16686`.
+jaeger:
+  replicas: 1
+
+  # Imagem oficial, sem patch — voltando a testar depois do fix do N+1 no
+  # backend (reduz drasticamente o volume real de spans que o disco
+  # precisa guardar). Imagem com patch de 1 linha (IndexCacheSize: 64MB)
+  # fica guardada em gcr.io/basedosdados-dev/jaeger:2.22.0-indexcache64mb
+  # como opção, caso o platô de RAM não se sustente sem ela de novo.
+  image:
+    repository: jaegertracing/jaeger
+    tag: 2.22.0
+
+  # `requests` é o que reserva de verdade no nó; `limits` é só o teto —
+  # `memory_limiter` abaixo é calibrado pra não chegar perto dele.
+  resources:
+    requests:
+      cpu: 100m
+      memory: 128Mi
+    limits:
+      cpu: 500m
+      memory: 512Mi
+
+  ingress:
+    enabled: false
+
+  service:
+    type: ClusterIP
+    # Porta de métricas internas do coletor (telemetry.metrics no
+    # userconfig abaixo) já exposta por padrão pelo chart como
+    # "internal-metrics" (8888) — raspada pelo servicemonitor.yaml.
+
+  extraVolumes:
+  - name: badger-storage
+    persistentVolumeClaim:
+      claimName: jaeger-badger-storage
+
+  extraVolumeMounts:
+  - name: badger-storage
+    mountPath: /badger
+
+# Sobrescreve por completo a config interna do Jaeger (não é merge).
+userconfig:
+  service:
+    extensions: [jaeger_storage, jaeger_query, healthcheckv2]
+    pipelines:
+      traces:
+        receivers: [otlp]
+        processors: [memory_limiter, batch]
+        exporters: [jaeger_storage_exporter]
+    telemetry:
+      resource:
+        service.name: jaeger
+      metrics:
+        level: detailed
+        readers:
+        - pull:
+            exporter:
+              prometheus:
+                host: 0.0.0.0
+                port: 8888
+      logs:
+        level: info
+
+  extensions:
+    # `http:` sem endpoint explícito escuta só em 127.0.0.1 nesse
+    # componente — readiness/liveness probe do Kubernetes bate via IP
+    # do pod, não localhost.
+    healthcheckv2:
+      use_v2: true
+      http:
+        endpoint: 0.0.0.0:13133
+    jaeger_query:
+      storage:
+        traces: some_store
+      # Sem `ui.config_file` — o path do exemplo oficial só existe no
+      # repo fonte clonado, não na imagem Docker publicada.
+    jaeger_storage:
+      backends:
+        some_store:
+          badger:
+            directories:
+              keys: /badger/keys
+              values: /badger/values
+            ephemeral: false
+            ttl:
+              spans: 72h
+            maintenance_interval: 10m
+
+  receivers:
+    otlp:
+      protocols:
+        grpc:
+          endpoint: 0.0.0.0:4317
+        http:
+          endpoint: 0.0.0.0:4318
+
+  processors:
+    memory_limiter:
+      check_interval: 100ms
+      limit_mib: 300
+      spike_limit_mib: 80
+    batch:
+
+  exporters:
+    jaeger_storage_exporter:
+      trace_storage: some_store
+      queue:
+        enabled: true
+        sizer: bytes
+        num_consumers: 4
+        queue_size: 50000000
+        # false, não o default real (true): nunca deixar a fila cheia
+        # bloquear a resposta HTTP de volta pro sidecar otel-collector
+        # do backend — prefere perder o span a atrasar a aplicação real.
+        block_on_overflow: false
+        wait_for_result: false
